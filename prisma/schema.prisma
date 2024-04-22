@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkId   String   @unique
+  role      Role
+  name      String
+  username  String   @unique
+  address   String?
+  country   String?
+  phone     String?
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner   Owner[]
+  student Student[]
+}
+
+model Owner {
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  payments Boolean @default(false)
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   String? @db.Uuid
+
+  subscription Subscription?
+}
+
+model Student {
+  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId  Int?
+  department String?
+  User       User?   @relation(fields: [userId], references: [id])
+  userId     String? @db.Uuid
+}
+
+model Subscription {
+  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  plan    Plan    @default(STANDARD)
+  credits Int     @default(10)
+  Owner   Owner?  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String? @unique @db.Uuid
+}
+
+enum Role {
+  ADMIN
+  OWNER
+  STUDENT
+}
+
+enum Plan {
+  STANDARD
+  PRO
+  ULTIMATE
+}
