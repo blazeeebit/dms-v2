@@ -54,7 +54,7 @@ export const CompleteOnBoardingSchema: ZodType<CompleteOnBoardingProps> =
     role: z.enum(['OWNER', 'STUDENT']),
   })
 
-export const SignInUser: ZodType<SignInUserProps> = z.object({
+export const SignInUserSchema: ZodType<SignInUserProps> = z.object({
   email: z.string().email({ message: 'Email format is not valid' }),
   password: z
     .string()

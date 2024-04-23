@@ -8,6 +8,7 @@ import {
   CompleteOnBoardingSchema,
   SignUpUserProps,
   SignUpUserSchema,
+  SignInUserSchema,
   SignInUserProps,
 } from '@/schemas/auth.schema'
 import { OAuthStrategy } from '@clerk/types'
@@ -27,13 +28,12 @@ export const useAuthSignIn = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignInUserProps>({
-    resolver: zodResolver(SignUpUserSchema),
+    resolver: zodResolver(SignInUserSchema),
     mode: 'onChange',
   })
   const onCompleteLoginWithEmailPassword = handleSubmit(
     async (values: SignInUserProps) => {
       if (!isLoaded) return
-
       try {
         setLoading(true)
         const completeLogin = await signIn.create({
@@ -59,7 +59,13 @@ export const useAuthSignIn = () => {
       }
     }
   )
-  return { register, onCompleteLoginWithEmailPassword, errors, loading }
+  return {
+    register,
+    onCompleteLoginWithEmailPassword,
+    errors,
+    loading,
+    handleSubmit,
+  }
 }
 
 export const useAuthSignUp = () => {

@@ -14,7 +14,7 @@ export const AnimatedSideBarBody = ({
           duration: 0.3,
         },
       }}
-      className="lg:inline hidden fixed left-0 w-[75px] h-full z-[50]"
+      className="lg:inline hidden fixed top-0 left-0 w-[75px] h-full z-[50]"
     >
       {children}
     </motion.div>

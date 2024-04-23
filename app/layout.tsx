@@ -4,6 +4,7 @@ import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from '@/components/providors/theme-providor'
 import { Toaster } from '@/components/ui/toaster'
+import { ProfileProvider } from '@/context/use-profile-context'
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'] })
 
@@ -27,8 +28,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
-            <Toaster />
+            <ProfileProvider>
+              {children}
+              <Toaster />
+            </ProfileProvider>
           </ThemeProvider>
         </body>
       </html>

@@ -1,16 +1,15 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { useClerk } from '@clerk/nextjs'
 import { LogOut } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
-export const SignOutButton = () => {
-  const { signOut } = useClerk()
-  const router = useRouter()
+type SignOutProps = {
+  logout(): void
+}
 
+export const SignOutButton = ({ logout }: SignOutProps) => {
   return (
-    <Button variant="ghost" onClick={() => signOut(() => router.push('/'))}>
+    <Button variant="ghost" onClick={logout}>
       <LogOut className="text-gray-400" />
     </Button>
   )

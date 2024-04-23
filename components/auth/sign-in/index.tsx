@@ -11,6 +11,7 @@ import { Loader } from '@/components/loader'
 export const SignInForm = () => {
   const { onCompleteLoginWithEmailPassword, loading, register, errors } =
     useAuthSignIn()
+
   return (
     <form
       onSubmit={onCompleteLoginWithEmailPassword}
@@ -32,7 +33,7 @@ export const SignInForm = () => {
       </div>
       <div className="flex flex-col gap-3">
         <Button type="submit" variant="outline">
-          <Loader loading={loading}>Complete Registration</Loader>
+          <Loader loading={loading}>Login</Loader>
         </Button>
       </div>
       <p>

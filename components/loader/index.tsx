@@ -1,14 +1,16 @@
+import { cn } from '@/lib/utils'
 import React from 'react'
 
 type LoaderProps = {
   loading: boolean
   children: React.ReactNode
+  className?: string
 }
 
-export const Loader = ({ loading, children }: LoaderProps) => {
+export const Loader = ({ loading, children, className }: LoaderProps) => {
   return loading ? (
-    <div className="w-full py-5 flex justify-center">
-      <div className="w-full flex justify-center py-10">
+    <div className={cn('w-full flex justify-center', className)}>
+      <div className="w-full flex justify-center">
         <div role="status">
           <svg
             aria-hidden="true"

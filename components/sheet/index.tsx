@@ -12,6 +12,7 @@ type SideDrawerProps = {
   children: React.ReactNode
   title?: string
   description?: string
+  side?: 'top' | 'right' | 'bottom' | 'left'
 }
 
 export const SideDrawer = ({
@@ -19,11 +20,12 @@ export const SideDrawer = ({
   children,
   title,
   description,
+  side,
 }: SideDrawerProps) => {
   return (
     <Sheet>
       <SheetTrigger>{trigger}</SheetTrigger>
-      <SheetContent>
+      <SheetContent side={side}>
         <SheetHeader>
           {title && <SheetTitle>{title}</SheetTitle>}
           {description && <SheetDescription>{description}</SheetDescription>}

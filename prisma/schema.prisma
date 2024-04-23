@@ -19,6 +19,7 @@ model User {
   role      Role
   name      String
   username  String   @unique
+  language  language @default(ENGLISH)
   address   String?
   country   String?
   phone     String?
@@ -65,4 +66,9 @@ enum Plan {
   STANDARD
   PRO
   ULTIMATE
+}
+
+enum language {
+  ENGLISH
+  TURKISH
 }

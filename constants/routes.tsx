@@ -1,8 +1,11 @@
+import { v4 as uuidv4 } from 'uuid'
+
 import {
-  ChevronRightSquare,
-  User,
-  GanttChartSquare,
   Building,
+  LayoutDashboard,
+  CreditCard,
+  Settings,
+  Users,
 } from 'lucide-react'
 
 type MediaUrlProps = {
@@ -16,10 +19,10 @@ export type PathUrlProps = {
 }
 
 export type AccountPagesMenuProps = {
+  id: string
   page: string
   path: string
   icon: JSX.Element
-  type?: 'OWNER' | 'STUDENT'
 }
 
 export type UserCommandsProps = {
@@ -36,17 +39,35 @@ export const PATH_URLS: PathUrlProps = {
   DASHBOARD_ADMIN: '/dashboard/admin',
 }
 
-export const ACCOUNT_PATHS: AccountPagesMenuProps[] = [
-  { page: 'overview', path: '/overview', icon: <GanttChartSquare /> },
-  { page: 'profile', path: '/profile', icon: <User /> },
-  { page: 'more', path: '/more', icon: <ChevronRightSquare /> },
-  { page: 'dorms', path: '/dorms', icon: <Building />, type: 'OWNER' },
-]
-
-export const ADMIN_ACCOUNT_PATHS: AccountPagesMenuProps[] = [
+export const ACCOUNT_PAGES_MENU_OWNER: AccountPagesMenuProps[] = [
   {
+    id: uuidv4(),
     page: 'overview',
-    path: '/overview',
-    icon: <User />,
+    path: `${PATH_URLS.DASHBOARD_OWNER}/`,
+    icon: <LayoutDashboard size={30} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'dormitories',
+    path: `${PATH_URLS.DASHBOARD_OWNER}/`,
+    icon: <Building size={30} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'billing',
+    path: `${PATH_URLS.DASHBOARD_OWNER}/`,
+    icon: <CreditCard size={30} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'settings',
+    path: `${PATH_URLS.DASHBOARD_OWNER}/`,
+    icon: <Settings size={30} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'community',
+    path: `${PATH_URLS.DASHBOARD_OWNER}/`,
+    icon: <Users size={30} />,
   },
 ]

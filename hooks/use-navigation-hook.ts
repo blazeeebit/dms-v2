@@ -1,3 +1,4 @@
+import { usePathname } from 'next/navigation'
 import { useState, useCallback } from 'react'
 
 export const useSideBar = () => {
@@ -9,8 +10,18 @@ export const useSideBar = () => {
     })
     resizeObserver.observe(node)
   }, [])
+  const pathname = usePathname()
+  const currentPage = pathname.split('/').pop()
   return {
     onResize,
     onSideBarRef,
+    currentPage,
   }
+}
+
+export const useNavBar = () => {
+  const pathname = usePathname()
+  const currentPage = pathname.split('/').pop()
+
+  return { currentPage }
 }

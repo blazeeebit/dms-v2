@@ -1,5 +1,6 @@
 'use server'
 
+import { PATH_URLS } from '@/constants/routes'
 import { client } from '@/lib/prisma'
 import { RedirectToSignIn } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
@@ -16,8 +17,6 @@ const onAuthenticated = async () => {
 export const onBoardOauthUser = async () => {
   const user = await onAuthenticated()
 
-  //check if user has selected a type
-  //direct accordingly
   if (user) {
     const role = await client.user.findUnique({
       where: {
@@ -31,9 +30,11 @@ export const onBoardOauthUser = async () => {
 
     if (!role) redirect(`/onboarding/${user.id}`)
 
-    if (role.role == 'OWNER') redirect(`/dashboard/owner/${role.id}`)
+    if (role.role == 'OWNER')
+      redirect(`${PATH_URLS.DASHBOARD_OWNER}/${role.id}/overview`)
 
-    if (role.role == 'STUDENT') redirect(`/dashboard/student/${role.id}`)
+    if (role.role == 'STUDENT')
+      redirect(`${PATH_URLS.DASHBOARD_STUDENT}/${role.id}/overview`)
   }
 }
 
@@ -153,6 +154,27 @@ export const onCompleteEmailPasswordSignUp = async (
           message: 'Student Account Created',
         }
       }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetUserInfo = async (id: string) => {
+  try {
+    const loggedInUser = await client.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        language: true,
+        username: true,
+        role: true,
+      },
+    })
+
+    if (loggedInUser) {
+      return loggedInUser
     }
   } catch (error) {
     console.log(error)
