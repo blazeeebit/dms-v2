@@ -3,16 +3,18 @@ import { Label } from '../../ui/label'
 import { Input } from '../../ui/input'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
+import { Textarea } from '@/components/ui/textarea'
 
 type FormGeneratorProps = {
-  type: 'text' | 'email' | 'password'
-  inputType: 'select' | 'input'
+  type?: 'text' | 'email' | 'password' | 'number'
+  inputType: 'select' | 'input' | 'textarea'
   options?: { value: string; label: string; id: string }[]
   label?: string
   placeholder: string
   register: UseFormRegister<any>
   name: string
   errors: FieldErrors<FieldValues>
+  lines?: number
 }
 
 export const FormGenerator = ({
@@ -24,6 +26,7 @@ export const FormGenerator = ({
   name,
   errors,
   type,
+  lines,
 }: FormGeneratorProps) => {
   switch (inputType) {
     case 'input':
@@ -59,6 +62,27 @@ export const FormGenerator = ({
                 </option>
               ))}
           </select>
+          <ErrorMessage
+            errors={errors}
+            name={name}
+            render={({ message }) => (
+              <p className="text-red-400 mt-2">
+                {message === 'Required' ? '' : message}
+              </p>
+            )}
+          />
+        </Label>
+      )
+    case 'textarea':
+      return (
+        <Label className="flex flex-col gap-2" htmlFor={`input-${label}`}>
+          {label && label}
+          <Textarea
+            id={`input-${label}`}
+            placeholder={placeholder}
+            {...register(name)}
+            rows={lines}
+          />
           <ErrorMessage
             errors={errors}
             name={name}

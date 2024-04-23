@@ -36,7 +36,6 @@ export const ProfileProvider = ({ children }: withChildren) => {
   const [user, setUser] = useState(ProfileInitialValues.user)
 
   const onDispatch = (action: ProfileAction, state: ProfileStateProps) => {
-    console.log(action)
     switch (action) {
       case 'LANGUAGE':
         return setUser((prev) => ({
@@ -52,7 +51,6 @@ export const ProfileProvider = ({ children }: withChildren) => {
           role: state.role,
         }))
       case 'LOGOUT':
-        console.log(state)
         return setUser((prev) => ({
           ...prev,
           language: state.language,

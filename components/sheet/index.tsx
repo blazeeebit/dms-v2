@@ -13,6 +13,7 @@ type SideDrawerProps = {
   title?: string
   description?: string
   side?: 'top' | 'right' | 'bottom' | 'left'
+  className?: string
 }
 
 export const SideDrawer = ({
@@ -21,11 +22,12 @@ export const SideDrawer = ({
   title,
   description,
   side,
+  className,
 }: SideDrawerProps) => {
   return (
     <Sheet>
       <SheetTrigger>{trigger}</SheetTrigger>
-      <SheetContent side={side}>
+      <SheetContent side={side} className={className}>
         <SheetHeader>
           {title && <SheetTitle>{title}</SheetTitle>}
           {description && <SheetDescription>{description}</SheetDescription>}

@@ -2,7 +2,7 @@
 import React from 'react'
 import { AuthHeader } from '../header'
 import { FormGenerator } from '@/components/forms/generator'
-import { USER_SIGNIN_FORM, UserAuthFormProps } from '@/constants/form'
+import { USER_SIGNIN_FORM, FormProps } from '@/constants/form'
 import { Button } from '@/components/ui/button'
 import { useAuthSignIn } from '@/hooks/use-auth-hook'
 import Link from 'next/link'
@@ -22,7 +22,7 @@ export const SignInForm = () => {
         text="Looks like you already joined! Welcome back."
       />
       <div className="flex flex-col gap-3">
-        {USER_SIGNIN_FORM.map((fields: UserAuthFormProps) => (
+        {USER_SIGNIN_FORM.map((fields: FormProps) => (
           <FormGenerator
             key={fields.id}
             {...fields}

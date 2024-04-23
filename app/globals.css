@@ -66,6 +66,15 @@
   }
 }
 
+.no-scroll-window::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scroll-window {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @layer base {
   * {
     @apply border-border;

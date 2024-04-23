@@ -2,7 +2,7 @@
 
 import { useAuthSignUp } from '@/hooks/use-auth-hook'
 import { AuthHeader } from '../header'
-import { USER_SIGNUP_FORM, UserAuthFormProps } from '@/constants/form'
+import { USER_SIGNUP_FORM, FormProps } from '@/constants/form'
 import { FormGenerator } from '@/components/forms/generator'
 import { Button } from '@/components/ui/button'
 import { OtpInput } from '@/components/otp-input'
@@ -36,7 +36,7 @@ export const SignUpForm = () => {
         register={register}
       />
       <div className="flex flex-col gap-3">
-        {USER_SIGNUP_FORM.map((fields: UserAuthFormProps) => (
+        {USER_SIGNUP_FORM.map((fields: FormProps) => (
           <FormGenerator
             key={fields.id}
             {...fields}
