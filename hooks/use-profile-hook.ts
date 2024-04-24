@@ -1,3 +1,4 @@
+import { DMS_CONTENT } from '@/constants/language'
 import { useProfileContext } from '@/context/use-profile-context'
 import { useClerk } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
@@ -10,6 +11,7 @@ export const useTranslation = () => {
   const onChangeLanguagePreference = async () => {
     setLoading(true)
     onDispatch('LANGUAGE', user)
+    console.log(DMS_CONTENT.SEARCH[user.language]);
     setLoading(false)
   }
 

@@ -23,7 +23,7 @@ export const LanguageToggle = ({ onResize }: LanguageToggleProps) => {
       <AnimatedSideBarMenuItem onView={onResize}>
         <Loader loading={loading}>
           <p className="text-base leading-none font-semibold capitalize">
-            {language == 'ENGLISH' ? 'English' : 'Turkish'}
+            {language == 'ENGLISH' ? 'Turkish' : 'English'}
           </p>
         </Loader>
       </AnimatedSideBarMenuItem>
