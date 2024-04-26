@@ -43,7 +43,7 @@ export const SideBar = ({ menu, id }: SideBarProps) => {
               href={`${item.path}${id}/${item.page}`}
               key={item.id}
               className={cn(
-                'flex gap-x-5 cursor-pointer items-center p-1 rounded-md',
+                'flex gap-x-5 cursor-pointer items-center p-2 rounded-md',
                 currentPage == item.page &&
                   'bg-black dark:bg-white dark:text-black text-white'
               )}

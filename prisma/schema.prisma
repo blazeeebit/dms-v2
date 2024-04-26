@@ -34,17 +34,19 @@ model User {
 model Owner {
   id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   payments Boolean @default(false)
-  User     User?   @relation(fields: [userId], references: [id])
+  User     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String? @db.Uuid
 
   subscription Subscription?
+
+  dorms Dormitories[]
 }
 
 model Student {
   id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   studentId  Int?
   department String?
-  User       User?   @relation(fields: [userId], references: [id])
+  User       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String? @db.Uuid
 }
 
@@ -54,6 +56,33 @@ model Subscription {
   credits Int     @default(10)
   Owner   Owner?  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String? @unique @db.Uuid
+}
+
+model Dormitories {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  price         String
+  description   String
+  featuredImage String
+  gallery       String[]
+  Owner         Owner?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String?  @db.Uuid
+
+  services Services[]
+}
+
+model Services {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String       @unique
+  icon          String
+  Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
+  dormitoriesId String?      @db.Uuid
+}
+
+model Service {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @unique
+  icon String
 }
 
 enum Role {
