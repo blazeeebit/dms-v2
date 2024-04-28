@@ -15,7 +15,11 @@ const DashboardLayout = async ({
 
   return (
     <div className="container h-screen 2xl:p-0 lg:pl-28">
-      <SideBar menu={ACCOUNT_PAGES_MENU_OWNER} id={params.id} />
+      <SideBar
+        language={loggedInUser?.language!}
+        menu={ACCOUNT_PAGES_MENU_OWNER}
+        id={params.id}
+      />
       <DashboardNavBar
         id={params.id}
         user={{

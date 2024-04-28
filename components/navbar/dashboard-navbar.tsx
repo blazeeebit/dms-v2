@@ -22,12 +22,12 @@ export const DashboardNavBar = ({ user, id }: DashboardNavBarProps) => {
     <div className="flex py-5 mb-10">
       <div className="flex-1 flex justify-start items-center">
         <MobileDrawer />
-        <SearchBar className="lg:inline hidden" />
+        <SearchBar language={user.language} className="lg:inline hidden" />
       </div>
       <div className="flex justify-end items-center gap-1">
         <OwnerCredits id={id} />
         <SignOutButton logout={onLogout} />
-        <ThemeToggle />
+        <ThemeToggle language={user.language} />
       </div>
     </div>
   )

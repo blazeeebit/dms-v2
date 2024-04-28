@@ -18,9 +18,16 @@ const ListingForm = dynamic(
 
 type CreateListingProps = {
   id: string
+  services:
+    | {
+        id: string
+        name: string
+        icon: string
+      }[]
+    | undefined
 }
 
-export const CreateListing = ({ id }: CreateListingProps) => {
+export const CreateListing = ({ id, services }: CreateListingProps) => {
   return (
     <SideDrawer
       title="Create a listing"
@@ -31,7 +38,7 @@ export const CreateListing = ({ id }: CreateListingProps) => {
         </Card>
       }
     >
-      <ListingForm id={id} />
+      <ListingForm services={services} id={id} />
     </SideDrawer>
   )
 }

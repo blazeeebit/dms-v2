@@ -18,8 +18,10 @@ model User {
   clerkId   String   @unique
   role      Role
   name      String
+  email     String?  @unique
   username  String   @unique
-  language  language @default(ENGLISH)
+  image     String?
+  language  Language @default(ENGLISH)
   address   String?
   country   String?
   phone     String?
@@ -60,26 +62,44 @@ model Subscription {
 
 model Dormitories {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String
   price         String
-  description   String
   featuredImage String
   gallery       String[]
+  location      String?
   Owner         Owner?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId       String?  @db.Uuid
 
-  services Services[]
+  active Boolean @default(false)
+
+  language DormitoriesLanguage[]
+  service  Service[]
 }
 
-model Services {
+model DormitoriesLanguage {
   id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String       @unique
-  icon          String
+  name          String
+  description   String
+  language      Language     @default(ENGLISH)
   Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
   dormitoriesId String?      @db.Uuid
 }
 
 model Service {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  icon          String
+  rating        Int          @default(0)
+  Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
+  dormitoriesId String?      @db.Uuid
+}
+
+model Services {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @unique
+  icon String
+}
+
+model Filters {
   id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name String @unique
   icon String
@@ -97,7 +117,7 @@ enum Plan {
   ULTIMATE
 }
 
-enum language {
+enum Language {
   ENGLISH
   TURKISH
 }

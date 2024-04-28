@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 type ListingServiceProps = {
-  id: string
   name: string
+  icon: string
 }
 
 export type CreateDormListingProps = {
@@ -29,13 +29,24 @@ export const CreateDormListingSchema = z.object({
     .refine((files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type), {
       message: 'Only JPG, JPEG & PNG are accepted file formats',
     }),
-  price: z.string(),
-  services: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-    })
-  ),
+  price: z.string().min(1, { message: 'Price cannot be empty' }),
+  services: z
+    .array(
+      z.object({
+        name: z.string(),
+        icon: z.string(),
+      })
+    )
+    .refine(
+      (services) => {
+        if (services.length > 0) {
+          return true
+        } else {
+          return false
+        }
+      },
+      { message: 'You must pick atleast on service' }
+    ),
   description: z
     .string()
     .min(100, { message: 'The description must be at least 100 characters' })

@@ -43,7 +43,6 @@ export const ProfileProvider = ({ children }: withChildren) => {
           language: state.language == 'ENGLISH' ? 'TURKISH' : 'ENGLISH',
         }))
       case 'LOGIN':
-        console.log(state)
         return setUser((prev) => ({
           ...prev,
           language: state.language,

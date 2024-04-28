@@ -9,8 +9,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { DMS_CONTENT } from '@/constants/language'
 
-export const ThemeToggle = () => {
+type ThemeToggleProps = {
+  language: 'ENGLISH' | 'TURKISH'
+}
+
+export const ThemeToggle = ({ language }: ThemeToggleProps) => {
   const { setTheme } = useTheme()
   return (
     <DropdownMenu>
@@ -23,13 +28,13 @@ export const ThemeToggle = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme('light')}>
-          Light
+          {DMS_CONTENT.UI_MODE[language].content['light']}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('dark')}>
-          Dark
+          {DMS_CONTENT.UI_MODE[language].content['dark']}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('system')}>
-          System
+          {DMS_CONTENT.UI_MODE[language].content['system']}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

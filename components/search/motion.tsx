@@ -12,7 +12,7 @@ export const SearchResults = ({ state, children }: SearchResultsProps) => {
     <AnimatePresence mode="wait">
       {state && (
         <motion.div
-          className="absolute w-full top-[115%]"
+          className="absolute w-full top-[115%] z-50"
           initial={{
             y: '50%',
             opacity: 0,

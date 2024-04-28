@@ -8,10 +8,16 @@ import { Loader } from '../loader'
 
 type LanguageToggleProps = {
   onResize: number
+  id: string
+  language: 'ENGLISH' | 'TURKISH'
 }
 
-export const LanguageToggle = ({ onResize }: LanguageToggleProps) => {
-  const { onChangeLanguagePreference, language, loading } = useTranslation()
+export const LanguageToggle = ({
+  onResize,
+  id,
+  language,
+}: LanguageToggleProps) => {
+  const { onChangeLanguagePreference, loading } = useTranslation(id)
   return (
     <div
       onClick={onChangeLanguagePreference}
@@ -23,7 +29,7 @@ export const LanguageToggle = ({ onResize }: LanguageToggleProps) => {
       <AnimatedSideBarMenuItem onView={onResize}>
         <Loader loading={loading}>
           <p className="text-base leading-none font-semibold capitalize">
-            {language == 'ENGLISH' ? 'Turkish' : 'English'}
+            {language}
           </p>
         </Loader>
       </AnimatedSideBarMenuItem>

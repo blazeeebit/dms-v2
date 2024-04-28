@@ -8,13 +8,15 @@ import { AccountPagesMenuProps, MEDIA_URLS } from '@/constants/routes'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { LanguageToggle } from '../language-toggle'
+import { DMS_CONTENT } from '@/constants/language'
 
 type SideBarProps = {
   menu: AccountPagesMenuProps[]
   id: string
+  language: 'ENGLISH' | 'TURKISH'
 }
 
-export const SideBar = ({ menu, id }: SideBarProps) => {
+export const SideBar = ({ menu, id, language }: SideBarProps) => {
   const { onSideBarRef, onResize, currentPage } = useSideBar()
   return (
     <AnimatedSideBarBody>
@@ -44,21 +46,22 @@ export const SideBar = ({ menu, id }: SideBarProps) => {
               key={item.id}
               className={cn(
                 'flex gap-x-5 cursor-pointer items-center p-2 rounded-md',
-                currentPage == item.page &&
-                  'bg-black dark:bg-white dark:text-black text-white'
+                currentPage == item.page
+                  ? 'border-gray-300 border-2 dark:border-white text-gray-500 dark:text-white'
+                  : 'dark:text-gray-600 text-gray-400'
               )}
             >
               {item.icon}
               <AnimatedSideBarMenuItem onView={onResize}>
                 <p className="text-base leading-none font-semibold capitalize">
-                  {item.page}
+                  {DMS_CONTENT.SIDEBAR[language].content[item.page]}
                 </p>
               </AnimatedSideBarMenuItem>
             </Link>
           ))}
         </div>
         <div className="px-4 z-10 flex flex-col gap-3 mb-5">
-          <LanguageToggle onResize={onResize} />
+          <LanguageToggle language={language} onResize={onResize} id={id} />
         </div>
       </Card>
     </AnimatedSideBarBody>
