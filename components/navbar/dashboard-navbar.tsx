@@ -25,7 +25,7 @@ export const DashboardNavBar = ({ user, id }: DashboardNavBarProps) => {
         <SearchBar language={user.language} className="lg:inline hidden" />
       </div>
       <div className="flex justify-end items-center gap-1">
-        <OwnerCredits id={id} />
+        {user.role == 'OWNER' && <OwnerCredits id={id} />}
         <SignOutButton logout={onLogout} />
         <ThemeToggle language={user.language} />
       </div>

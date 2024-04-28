@@ -250,10 +250,10 @@ export const useOnBoarding = () => {
           })
           setLoading(false)
           if (values.role == 'OWNER') {
-            router.push(`/dashboard/owner/${onBoarded.id}`)
+            router.push(`/dashboard/owner/${onBoarded.id}/overview`)
           }
           if (values.role == 'STUDENT') {
-            router.push(`/dashboard/student/${onBoarded.id}`)
+            router.push(`/dashboard/student/${onBoarded.id}/overview`)
           }
         }
       } catch (error) {}
