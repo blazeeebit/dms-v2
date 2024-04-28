@@ -48,6 +48,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
           data: {
             clerkId: user.id,
             username: user.emailAddresses[0].emailAddress.split('@')[0],
+            email: user.emailAddresses[0].emailAddress,
             name: user.fullName as string,
             role: role,
             owner: {
@@ -107,6 +108,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
 export const onCompleteEmailPasswordSignUp = async (
   clerkid: string,
   name: string,
+  email: string,
   username: string,
   role: 'OWNER' | 'STUDENT'
 ) => {
@@ -116,6 +118,7 @@ export const onCompleteEmailPasswordSignUp = async (
         data: {
           clerkId: clerkid,
           username,
+          email,
           name,
           role,
           owner: {
