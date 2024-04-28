@@ -13,6 +13,11 @@ export type CreateDormListingProps = {
   description: string
 }
 
+export type EditDormContentProps = {
+  name?: string
+  description?: string
+}
+
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 2
 const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg']
 
@@ -53,4 +58,14 @@ export const CreateDormListingSchema = z.object({
     .max(1000, {
       message: 'Description must not be more then 1000 characters',
     }),
+})
+
+export const EditDormContentSchema = z.object({
+  name: z.string().min(1, { message: 'You must add a new title' }).optional(),
+  description: z
+    .string()
+    .min(100, {
+      message: 'You must add a new description of atleast 100 words',
+    })
+    .optional(),
 })

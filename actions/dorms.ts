@@ -116,6 +116,11 @@ export const onGetDormListings = async (id: string) => {
           ownerId: ownerIdAndPreference.owner[0].id,
         },
         include: {
+          service: {
+            select: {
+              rating: true,
+            },
+          },
           language: {
             where: {
               language: ownerIdAndPreference.language,
@@ -179,6 +184,53 @@ export const onActiveateDorm = async (dormId: string, state: boolean) => {
       return {
         status: 200,
         message: `Listing ${!dormStatus.active ? 'deactivated' : 'activated'}`,
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetDormProfile = async (id: string, ownerId: string) => {
+  try {
+    const userLanguagePreference = await client.user.findUnique({
+      where: {
+        id: ownerId,
+      },
+      select: {
+        language: true,
+      },
+    })
+
+    if (userLanguagePreference) {
+      const dormProfile = await client.owner.findUnique({
+        where: {
+          userId: ownerId,
+        },
+        include: {
+          dorms: {
+            where: {
+              id,
+            },
+            select: {
+              id: true,
+              price: true,
+              language: {
+                where: {
+                  language: userLanguagePreference.language,
+                },
+              },
+              service: true,
+              location: true,
+              featuredImage: true,
+              gallery: true,
+            },
+          },
+        },
+      })
+
+      if (dormProfile) {
+        return dormProfile
       }
     }
   } catch (error) {

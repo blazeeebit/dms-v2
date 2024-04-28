@@ -37,7 +37,7 @@ model Owner {
   id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   payments Boolean @default(false)
   User     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String? @db.Uuid
+  userId   String? @unique @db.Uuid
 
   subscription Subscription?
 
@@ -49,7 +49,7 @@ model Student {
   studentId  Int?
   department String?
   User       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String? @db.Uuid
+  userId     String? @unique @db.Uuid
 }
 
 model Subscription {

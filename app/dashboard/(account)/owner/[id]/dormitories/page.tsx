@@ -22,6 +22,7 @@ const OwnerDormitoriesPage = async ({ params }: { params: { id: string } }) => {
         {ownerDorms?.dorms.length ? (
           ownerDorms.dorms.map((dorm) => (
             <ListingCard
+              userId={params.id}
               payments={ownerDorms.payments}
               id={dorm.id}
               description={dorm.language[0].description}

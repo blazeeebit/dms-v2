@@ -8,7 +8,7 @@ export const Navbar = () => {
     <div className="grid grid-cols-2">
       <div className="col-span-1"></div>
       <div className="col-span-1 flex justify-end gap-4">
-        <ThemeToggle />
+        <ThemeToggle language="ENGLISH" />
         <div className="flex">
           <Link href="/sign-up">
             <Button
@@ -21,7 +21,7 @@ export const Navbar = () => {
           <Link href="/sign-in">
             <Button
               variant="ghost"
-              className="font-bold rounded-full hover:bg-white hover:text-gray-600"
+              className="font-bold dark:hover:bg-black rounded-full hover:bg-white hover:text-gray-600"
             >
               Login
             </Button>

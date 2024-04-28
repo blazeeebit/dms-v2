@@ -21,7 +21,7 @@ export const DashboardNavBar = ({ user, id }: DashboardNavBarProps) => {
   return (
     <div className="flex py-5 mb-10">
       <div className="flex-1 flex justify-start items-center">
-        <MobileDrawer />
+        <MobileDrawer language={user.language} />
         <SearchBar language={user.language} className="lg:inline hidden" />
       </div>
       <div className="flex justify-end items-center gap-1">

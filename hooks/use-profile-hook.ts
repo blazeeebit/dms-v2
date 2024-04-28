@@ -1,9 +1,15 @@
 import { onSetLanguagePreference } from '@/actions/translate'
 import { useToast } from '@/components/ui/use-toast'
 import { useProfileContext } from '@/context/use-profile-context'
+import {
+  EditDormContentProps,
+  EditDormContentSchema,
+} from '@/schemas/list.schema'
 import { useClerk } from '@clerk/nextjs'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const useTranslation = (id: string) => {
   const { onDispatch, user } = useProfileContext()
@@ -59,4 +65,31 @@ export const useProfile = (user: {
   }
 
   return { onLogout }
+}
+
+export const useEditDorm = (id: string) => {
+  const {
+    formState: { errors },
+    register,
+    reset,
+    handleSubmit,
+  } = useForm<EditDormContentProps>({
+    resolver: zodResolver(EditDormContentSchema),
+    mode: 'onChange',
+  })
+
+  const [onEdit, setOnEdit] = useState<boolean>(false)
+
+  const onEnableEdit = () => setOnEdit(true)
+
+  const onDisableEdit = () => {
+    setOnEdit(false)
+    reset()
+  }
+
+  const onUpdateDorm = handleSubmit(async (value) => {
+    console.log(value)
+  })
+
+  return { onUpdateDorm, register, errors, onEnableEdit, onEdit, onDisableEdit }
 }

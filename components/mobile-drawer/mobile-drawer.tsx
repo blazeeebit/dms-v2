@@ -14,12 +14,16 @@ const EmuLogo = dynamic(
   { ssr: false }
 )
 
-export const MobileDrawer = () => {
+type MobileDrawerProps = {
+  language: 'ENGLISH' | 'TURKISH'
+}
+
+export const MobileDrawer = ({ language }: MobileDrawerProps) => {
   return (
     <div className="lg:hidden">
       <SideDrawer trigger={<Menu size={30} />} side="left">
         <EmuLogo />
-        <SearchBar />
+        <SearchBar language={language} />
       </SideDrawer>
     </div>
   )
