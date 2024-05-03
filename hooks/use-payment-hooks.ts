@@ -1,4 +1,5 @@
 import { onGetUserSubscription } from '@/actions/payment'
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 export const useSubscription = (id: string) => {
@@ -27,4 +28,25 @@ export const useSubscription = (id: string) => {
   }, [])
 
   return { isPlan, loading }
+}
+
+export const useStripe = () => {
+  const [onStripeAccountPending, setOnStripeAccountPending] =
+    useState<boolean>(false)
+  const onStripeConnect = async () => {
+    try {
+      setOnStripeAccountPending(true)
+      const account = await axios.get(`/api/stripe/create`)
+      if (account) {
+        setOnStripeAccountPending(false)
+        if (account) {
+          window.location.href = account.data.url
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return { onStripeConnect, onStripeAccountPending }
 }
