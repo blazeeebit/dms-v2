@@ -18,7 +18,6 @@ model User {
   clerkId   String   @unique
   role      Role
   name      String
-  email     String?  @unique
   username  String   @unique
   image     String?
   language  Language @default(ENGLISH)

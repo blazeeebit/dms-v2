@@ -141,7 +141,6 @@ export const useAuthSignUp = () => {
         const registered = await onCompleteEmailPasswordSignUp(
           signUp.createdUserId,
           values.name,
-          values.email,
           values.username,
           values.role
         )
