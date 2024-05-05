@@ -29,29 +29,7 @@ export const onSearchQuery = async (
         },
         select: {
           id: true,
-          email: true,
-          name: true,
-          image: true,
-        },
-      })
-
-      if (result) {
-        return result
-      }
-
-      return []
-    }
-
-    if (filter == 'email') {
-      const result = await client.user.findMany({
-        where: {
-          email: {
-            startsWith: query,
-          },
-        },
-        select: {
-          id: true,
-          email: true,
+          clerkId: true,
           name: true,
           image: true,
         },
