@@ -58,18 +58,17 @@ export const Results = ({
         {loading ? (
           <UISkeletons skeleton="search" />
         ) : (
-          <div>Sarch</div>
-          // results?.length &&
-          // results.map((result) => (
-          //   <ResultItems
-          //     key={result.id}
-          //     name={result.language[0].name}
-          //     id={result.id}
-          //     image={result.featuredImage}
-          //     description={result.language[0].description}
-          //     type={activeFilter}
-          //   />
-          // ))
+          results?.length &&
+          results.map((result) => (
+            <ResultItems
+              key={result.id}
+              name={result.language[0].name}
+              id={result.id}
+              image={result.featuredImage}
+              description={result.language[0].description}
+              type={activeFilter}
+            />
+          ))
         )}
       </div>
     </div>
