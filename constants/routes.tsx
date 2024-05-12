@@ -6,6 +6,7 @@ import {
   CreditCard,
   Settings,
   Users,
+  CircleDollarSign,
 } from 'lucide-react'
 
 type MediaUrlProps = {
@@ -69,5 +70,32 @@ export const ACCOUNT_PAGES_MENU_OWNER: AccountPagesMenuProps[] = [
     page: 'community',
     path: `${PATH_URLS.DASHBOARD_OWNER}/`,
     icon: <Users size={25} />,
+  },
+]
+
+export const ACCOUNT_PAGES_MENU_STUDENT: AccountPagesMenuProps[] = [
+  {
+    id: uuidv4(),
+    page: 'overview',
+    path: `${PATH_URLS.DASHBOARD_STUDENT}/`,
+    icon: <LayoutDashboard size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'dormitories',
+    path: `${PATH_URLS.DASHBOARD_STUDENT}/`,
+    icon: <Building size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'compare',
+    path: `${PATH_URLS.DASHBOARD_STUDENT}/`,
+    icon: <CircleDollarSign size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'settings',
+    path: `${PATH_URLS.DASHBOARD_STUDENT}/`,
+    icon: <Settings size={25} />,
   },
 ]

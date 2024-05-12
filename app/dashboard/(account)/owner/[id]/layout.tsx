@@ -2,6 +2,7 @@ import { onGetUserInfo } from '@/actions/auth'
 import { DashboardNavBar } from '@/components/navbar/dashboard-navbar'
 import { SideBar } from '@/components/sidebar'
 import { ACCOUNT_PAGES_MENU_OWNER } from '@/constants/routes'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 const DashboardLayout = async ({
@@ -12,6 +13,8 @@ const DashboardLayout = async ({
   params: { id: string }
 }) => {
   const loggedInUser = await onGetUserInfo(params.id)
+
+  if (loggedInUser?.role !== 'OWNER') redirect('/dashboard')
 
   return (
     <div className="container h-screen 2xl:p-0 lg:pl-28">

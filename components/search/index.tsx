@@ -21,6 +21,8 @@ type SearchBarProps = {
 export const SearchBar = ({ className, language }: SearchBarProps) => {
   const { search, register, loading, filter, onSetFilter, results } =
     useSearchBar(language)
+
+  console.log(results)
   return (
     <Card className={cn('lg:w-[500px] relative rounded-sm', className)}>
       <div className="flex gap-2 items-center px-3">

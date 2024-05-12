@@ -237,3 +237,83 @@ export const onGetDormProfile = async (id: string, ownerId: string) => {
     console.log(error)
   }
 }
+
+export const onSearchDormToCompare = async (
+  query: string,
+  language: 'ENGLISH' | 'TURKISH'
+) => {
+  try {
+    const dorms = await client.dormitories.findMany({
+      where: {
+        active: true,
+        language: {
+          some: {
+            name: {
+              startsWith: query,
+              mode: 'insensitive',
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        featuredImage: true,
+        language: {
+          where: {
+            language: language,
+          },
+          select: {
+            name: true,
+            description: true,
+          },
+        },
+      },
+      take: 5,
+    })
+
+    if (dorms) {
+      return dorms
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetSingleCompareDorm = async (
+  id: string,
+  language: 'ENGLISH' | 'TURKISH'
+) => {
+  try {
+    const dorm = await client.dormitories.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        featuredImage: true,
+        price: true,
+        service: {
+          select: {
+            name: true,
+            icon: true,
+            rating: true,
+          },
+        },
+        language: {
+          where: {
+            language,
+          },
+          select: {
+            name: true,
+            description: true,
+          },
+        },
+      },
+    })
+
+    if (dorm) {
+      return dorm
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

@@ -25,6 +25,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
         billing: 'billing',
         settings: 'settings',
         community: 'community',
+        compare: 'compare',
       },
     },
     TURKISH: {
@@ -34,6 +35,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
         billing: 'faturalandırma',
         settings: 'ayarlar',
         community: 'toplum',
+        compare: 'karşılaştırmak',
       },
     },
   },
