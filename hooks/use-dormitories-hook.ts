@@ -1,5 +1,11 @@
-import { onActiveateDorm, onCreateNewListing } from '@/actions/dorms'
+import {
+  onActiveateDorm,
+  onCreateNewListing,
+  onGetSingleCompareDorm,
+  onSearchDormToCompare,
+} from '@/actions/dorms'
 import { useToast } from '@/components/ui/use-toast'
+import { useProfileContext } from '@/context/use-profile-context'
 import {
   CreateDormListingProps,
   CreateDormListingSchema,
@@ -129,4 +135,89 @@ export const usePublish = (id: string) => {
   }
 
   return { onActivateListing }
+}
+
+export const useCompare = () => {
+  const [columns, setColumns] = useState<number[]>([])
+
+  const onAddDormToCompare = () => setColumns((prev) => [...prev, 1])
+
+  const onDeleteDormToCompare = (index: number) =>
+    setColumns((prev) => prev.filter((col, i) => i !== index))
+
+  return {
+    columns,
+    onAddDormToCompare,
+    onDeleteDormToCompare,
+  }
+}
+
+export const useCompareDorm = () => {
+  const { watch, register } = useForm()
+  const [compareDorm, setCompareDorm] = useState<{
+    service: {
+      name: string
+      icon: string
+      rating: number
+    }[]
+    price: string
+    featuredImage: string
+    language: {
+      name: string
+      description: string
+    }[]
+  }>()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [loadingDorm, setLoadingDorm] = useState<boolean>(false)
+  const { user } = useProfileContext()
+  const { language } = user
+  const [dormSearch, setDormSearch] = useState<
+    | {
+        id: string
+        featuredImage: string
+        language: {
+          name: string
+          description: string
+        }[]
+      }[]
+  >([])
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const onSelectDorm = async (id: string) => {
+    try {
+      setLoadingDorm(true)
+      const dorm = await onGetSingleCompareDorm(id, language)
+      if (dorm) {
+        setCompareDorm(dorm)
+        setLoadingDorm(false)
+      }
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    const compare = watch(async (values) => {
+      try {
+        setSearchQuery(values.query)
+        setLoading(true)
+        const dorms = await onSearchDormToCompare(values.query, language)
+        if (dorms) {
+          setDormSearch(dorms)
+          setLoading(false)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    })
+    return () => compare.unsubscribe()
+  }, [watch])
+
+  return {
+    onSelectDorm,
+    compareDorm,
+    loading,
+    searchQuery,
+    loadingDorm,
+    dormSearch,
+    register,
+  }
 }
