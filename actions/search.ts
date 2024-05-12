@@ -44,7 +44,6 @@ export const onSearchQuery = async (
     if (filter == 'dorm') {
       const result = await client.dormitories.findMany({
         where: {
-          active: true,
           language: {
             some: {
               name: {
