@@ -21,7 +21,7 @@ const EditDormitory = async ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
       <Card className="col-span-1 rounded-2xl">
-        <CardContent className="p-10 flex flex-col gap-5">
+        <CardContent className="py-5 ">
           <div className="w-full aspect-square relative rounded-xl shadow-md overflow-hidden">
             <Image
               src={dormProfile?.dorms[0].featuredImage!}
