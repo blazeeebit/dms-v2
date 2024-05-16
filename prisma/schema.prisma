@@ -44,11 +44,13 @@ model Owner {
 }
 
 model Student {
-  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  studentId  Int?
-  department String?
-  User       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String? @unique @db.Uuid
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  studentId        Int?
+  department       String?
+  User             User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String?   @unique @db.Uuid
+  sentMessages     Message[] @relation("sentMessages")
+  receivedMessages Message[] @relation("receivedMessages")
 }
 
 model Subscription {
@@ -102,6 +104,16 @@ model Filters {
   id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name String @unique
   icon String
+}
+
+model Message {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  message    String
+  createdAt  DateTime @default(now())
+  sender     Student  @relation(name: "sentMessages", fields: [senderId], references: [id])
+  receiver   Student  @relation(name: "receivedMessages", fields: [receiverId], references: [id])
+  senderId   String   @db.Uuid
+  receiverId String   @db.Uuid
 }
 
 enum Role {
