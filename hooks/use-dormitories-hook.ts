@@ -152,7 +152,7 @@ export const useCompare = () => {
   }
 }
 
-export const useCompareDorm = () => {
+export const useCompareDorm = (userid: string) => {
   const { watch, register } = useForm()
   const [compareDorm, setCompareDorm] = useState<{
     service: {
@@ -186,7 +186,7 @@ export const useCompareDorm = () => {
   const onSelectDorm = async (id: string) => {
     try {
       setLoadingDorm(true)
-      const dorm = await onGetSingleCompareDorm(id, language)
+      const dorm = await onGetSingleCompareDorm(id, userid)
       if (dorm) {
         setCompareDorm(dorm)
         setLoadingDorm(false)
@@ -199,7 +199,7 @@ export const useCompareDorm = () => {
       try {
         setSearchQuery(values.query)
         setLoading(true)
-        const dorms = await onSearchDormToCompare(values.query, language)
+        const dorms = await onSearchDormToCompare(values.query, userid)
         if (dorms) {
           setDormSearch(dorms)
           setLoading(false)

@@ -17,7 +17,7 @@ type DashboardNavBarProps = {
 }
 
 export const DashboardNavBar = ({ user, id }: DashboardNavBarProps) => {
-  const { onLogout } = useProfile(user)
+  const { onLogout } = useProfile(user, id)
   return (
     <div className="flex py-5 mb-10">
       <div className="flex-1 flex justify-start items-center">

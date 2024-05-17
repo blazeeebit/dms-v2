@@ -11,9 +11,10 @@ import { ServiceChip } from '../services/service-chip'
 
 type CompareCardProps = {
   onDelete(): void
+  id: string
 }
 
-export const CompareCard = ({ onDelete }: CompareCardProps) => {
+export const CompareCard = ({ onDelete, id }: CompareCardProps) => {
   const {
     onSelectDorm,
     loading,
@@ -22,7 +23,8 @@ export const CompareCard = ({ onDelete }: CompareCardProps) => {
     searchQuery,
     dormSearch,
     loadingDorm,
-  } = useCompareDorm()
+  } = useCompareDorm(id)
+  console.log(id)
   return (
     <Card className="col-span-1">
       <CardContent className="py-5">

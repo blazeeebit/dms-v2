@@ -33,7 +33,7 @@ const DashboardLayout = async ({
         }}
       />
       {children}
-      <StudentChatList />
+      <StudentChatList id={params.id} studentId={loggedInUser.student[0].id} />
     </div>
   )
 }

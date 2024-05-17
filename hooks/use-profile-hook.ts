@@ -1,3 +1,4 @@
+import { onStudentOffline } from '@/actions/realtime'
 import { onSetLanguagePreference } from '@/actions/translate'
 import { useToast } from '@/components/ui/use-toast'
 import { useProfileContext } from '@/context/use-profile-context'
@@ -38,11 +39,14 @@ export const useTranslation = (id: string) => {
   return { onChangeLanguagePreference, language, loading }
 }
 
-export const useProfile = (user: {
-  username: string
-  language: 'TURKISH' | 'ENGLISH'
-  role: 'OWNER' | 'STUDENT' | 'ADMIN'
-}) => {
+export const useProfile = (
+  user: {
+    username: string
+    language: 'TURKISH' | 'ENGLISH'
+    role: 'OWNER' | 'STUDENT' | 'ADMIN'
+  },
+  id: string
+) => {
   const { signOut } = useClerk()
   const router = useRouter()
 
@@ -54,6 +58,7 @@ export const useProfile = (user: {
 
   const onLogout = async () => {
     if (user) {
+      await onStudentOffline(id)
       signOut()
       onDispatch('LOGOUT', {
         language: 'ENGLISH',
