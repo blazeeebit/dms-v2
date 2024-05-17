@@ -1,4 +1,5 @@
 import { onGetUserInfo } from '@/actions/auth'
+import { StudentChatList } from '@/components/chat'
 import { DashboardNavBar } from '@/components/navbar/dashboard-navbar'
 import { SideBar } from '@/components/sidebar'
 import { ACCOUNT_PAGES_MENU_STUDENT } from '@/constants/routes'
@@ -32,6 +33,7 @@ const DashboardLayout = async ({
         }}
       />
       {children}
+      <StudentChatList id={params.id} studentId={loggedInUser.student[0].id} />
     </div>
   )
 }
