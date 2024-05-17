@@ -331,3 +331,50 @@ export const onGetSingleCompareDorm = async (id: string, userId: string) => {
     console.log(error)
   }
 }
+
+export const onGetAllDorms = async () => {
+  try {
+    const allDorms = await client.dormitories.findMany({
+      select: {
+        id: true,
+        price: true,
+        featuredImage: true,
+        service: true,
+        location: true,
+        gallery: true,
+        active: true,
+        language:true,
+      },
+    });
+
+    return allDorms;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const onGetDProfile = async (id: string) => {
+  try {
+    const dormProfile = await client.dormitories.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        price: true,
+        language: true,
+        service: true,
+        location: true,
+        featuredImage: true,
+        gallery: true,
+      },
+    });
+
+    if (dormProfile) {
+      return dormProfile;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+

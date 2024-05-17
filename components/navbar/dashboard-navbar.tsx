@@ -11,7 +11,7 @@ type DashboardNavBarProps = {
   id: string
   user: {
     username: string
-    language: 'TURKISH' | 'ENGLISH'
+    language: 'ENGLISH' | 'TURKISH'
     role: 'OWNER' | 'STUDENT' | 'ADMIN'
   }
 }

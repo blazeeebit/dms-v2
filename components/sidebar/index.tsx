@@ -54,7 +54,7 @@ export const SideBar = ({ menu, id, language }: SideBarProps) => {
               {item.icon}
               <AnimatedSideBarMenuItem onView={onResize}>
                 <p className="text-base leading-none font-semibold capitalize">
-                  {DMS_CONTENT.SIDEBAR[language].content[item.page]}
+                  {DMS_CONTENT.SIDEBAR[language]?.content[item.page]}
                 </p>
               </AnimatedSideBarMenuItem>
             </Link>
