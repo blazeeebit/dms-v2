@@ -1,3 +1,4 @@
+import { client } from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
@@ -8,6 +9,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET!, {
 
 export async function GET(req: NextRequest) {
   try {
+    const searchParams = req.nextUrl.searchParams
+    const id = searchParams.get('id')
+
     const account = await stripe.accounts.create({
       type: 'standard',
       country: 'US',
@@ -43,18 +47,27 @@ export async function GET(req: NextRequest) {
         },
       },
     })
-
     if (account) {
-      const accountLink = await stripe.accountLinks.create({
-        account: account.id,
-        refresh_url: 'http://localhost:3000/callback/stripe/refresh',
-        return_url: 'http://localhost:3000/callback/stripe',
-        type: 'account_onboarding',
+      const integrateStripeAccount = await client.owner.update({
+        where: {
+          userId: id as string,
+        },
+        data: {
+          stripeId: account.id,
+        },
       })
 
-      return NextResponse.json({
-        url: accountLink.url,
-      })
+      if (integrateStripeAccount) {
+        const accountLink = await stripe.accountLinks.create({
+          account: account.id,
+          refresh_url: 'http://localhost:3000/callback/stripe/refresh',
+          return_url: `http://localhost:3000/dashboard/owner/${id}/integrations`,
+          type: 'account_onboarding',
+        })
+        return NextResponse.json({
+          url: accountLink.url,
+        })
+      }
     }
   } catch (error) {
     console.error(

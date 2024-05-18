@@ -3,7 +3,7 @@ import React from 'react'
 import { UISkeletons } from '../skeletons'
 import { Tooltip } from '../tooltip'
 import { IconRenderer } from '../icon-renderer'
-import { Card, CardDescription } from '../ui/card'
+import { Card } from '../ui/card'
 import { useResults } from '@/hooks/use-search-hook'
 import { cn } from '@/lib/utils'
 import dynamic from 'next/dynamic'
@@ -14,14 +14,28 @@ const ResultItems = dynamic(
 )
 
 type ResultsProps = {
-  results?: any[]
+  users: {
+    name: string
+    id: string
+    clerkId: string
+    image: string | null
+  }[]
+  dorms: {
+    id: string
+    language: {
+      name: string
+      description: string
+    }[]
+    featuredImage: string
+  }[]
   loading: boolean
   activeFilter?: string
   onFilter(filter: string): void
 }
 
 export const Results = ({
-  results,
+  users,
+  dorms,
   loading,
   activeFilter,
   onFilter,
@@ -57,16 +71,26 @@ export const Results = ({
       <div className="flex flex-col gap-3">
         {loading ? (
           <UISkeletons skeleton="search" />
-        ) : (
-          results?.length &&
-          results.map((result) => (
+        ) : activeFilter ? (
+          dorms.map((dorm) => (
             <ResultItems
-              key={result.id}
-              name={result.language[0].name}
-              id={result.id}
-              image={result.featuredImage}
-              description={result.language[0].description}
-              type={activeFilter}
+              type="dorm"
+              key={dorm.id}
+              name={dorm.language[0].name}
+              description={dorm.language[0].description}
+              id={dorm.id}
+              image={dorm.featuredImage}
+            />
+          ))
+        ) : (
+          users.map((user) => (
+            <ResultItems
+              type="user"
+              key={user.id}
+              name={user.name}
+              description=""
+              image={user.image!}
+              id={user.id}
             />
           ))
         )}

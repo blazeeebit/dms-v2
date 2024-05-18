@@ -1,6 +1,7 @@
 'use server'
 
 import { client } from '@/lib/prisma'
+import { clerkClient } from '@clerk/nextjs/server'
 
 export const onGetFilters = async () => {
   try {
@@ -25,6 +26,7 @@ export const onSearchQuery = async (
         where: {
           name: {
             startsWith: query,
+            mode: 'insensitive',
           },
         },
         select: {
@@ -36,10 +38,26 @@ export const onSearchQuery = async (
       })
 
       if (result) {
-        return result
+        let count = 0
+        const users: {
+          id: string
+          name: string
+          clerkId: string
+          image: string | null
+        }[] = []
+        while (count < result.length) {
+          if (!result[count].image) {
+            const user = await clerkClient.users.getUser(result[count].clerkId)
+            result[count].image = user.imageUrl
+            users.push(result[count])
+          } else {
+            users.push(result[count])
+          }
+          count++
+        }
+        console.log(users)
+        return { users: users }
       }
-
-      return []
     }
     if (filter == 'dorm') {
       const result = await client.dormitories.findMany({
@@ -47,7 +65,7 @@ export const onSearchQuery = async (
           language: {
             some: {
               name: {
-                contains: query,
+                startsWith: query,
                 mode: 'insensitive',
               },
             },
@@ -70,10 +88,8 @@ export const onSearchQuery = async (
       })
 
       if (result) {
-        return result
+        return { dorms: result }
       }
-
-      return []
     }
     if (filter == 'price') {
       const result = await client.dormitories.findMany({
@@ -100,10 +116,8 @@ export const onSearchQuery = async (
       })
 
       if (result) {
-        return result
+        return { dorms: result }
       }
-
-      return []
     }
   } catch (error) {
     console.log(error)

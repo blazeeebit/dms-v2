@@ -1,5 +1,6 @@
 'use server'
 import { client } from '@/lib/prisma'
+import { redirect } from 'next/navigation'
 
 export const onGetUserSubscription = async (id: string) => {
   try {
@@ -28,3 +29,5 @@ export const onGetUserSubscription = async (id: string) => {
     console.log(error)
   }
 }
+
+export const onGetStripeIntegration = async (id: string) => {}

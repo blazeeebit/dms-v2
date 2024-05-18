@@ -8,7 +8,24 @@ export const useSearchBar = (language: 'ENGLISH' | 'TURKISH') => {
   const [search, setSearch] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
   const [filter, setFilter] = useState<string | undefined>(undefined)
-  const [results, setResults] = useState<any[]>([])
+  const [userSearch, setUserSearch] = useState<
+    {
+      name: string
+      id: string
+      clerkId: string
+      image: string | null
+    }[]
+  >([])
+  const [dormSearch, setDormSearch] = useState<
+    {
+      id: string
+      language: {
+        name: string
+        description: string
+      }[]
+      featuredImage: string
+    }[]
+  >([])
   const { register, watch } = useForm<SearchQueryProps>({
     resolver: zodResolver(SearchQuerySchema),
   })
@@ -28,10 +45,13 @@ export const useSearchBar = (language: 'ENGLISH' | 'TURKISH') => {
           setLoading(true)
           setSearch(true)
           const results = await onSearchQuery(value.query, filter, language)
-          if (results) {
-            setResults(results)
-            setLoading(false)
+          if (results && results.users) {
+            setUserSearch(results.users)
           }
+          if (results && results.dorms) {
+            setDormSearch(results.dorms)
+          }
+          setLoading(false)
         }
         if (value.query == '') {
           setSearch(false)
@@ -44,7 +64,16 @@ export const useSearchBar = (language: 'ENGLISH' | 'TURKISH') => {
     return () => search.unsubscribe()
   }, [watch, filter])
 
-  return { search, setSearch, register, loading, filter, onSetFilter, results }
+  return {
+    search,
+    setSearch,
+    register,
+    loading,
+    filter,
+    onSetFilter,
+    userSearch,
+    dormSearch,
+  }
 }
 
 export const useResults = () => {

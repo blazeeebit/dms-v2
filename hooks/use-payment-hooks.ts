@@ -30,13 +30,13 @@ export const useSubscription = (id: string) => {
   return { isPlan, loading }
 }
 
-export const useStripe = () => {
+export const useStripe = (id: string) => {
   const [onStripeAccountPending, setOnStripeAccountPending] =
     useState<boolean>(false)
   const onStripeConnect = async () => {
     try {
       setOnStripeAccountPending(true)
-      const account = await axios.get(`/api/stripe/create`)
+      const account = await axios.get(`/api/stripe/create?id=${id}`)
       if (account) {
         setOnStripeAccountPending(false)
         if (account) {

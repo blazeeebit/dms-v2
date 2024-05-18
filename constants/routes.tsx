@@ -55,7 +55,7 @@ export const ACCOUNT_PAGES_MENU_OWNER: AccountPagesMenuProps[] = [
   },
   {
     id: uuidv4(),
-    page: 'billing',
+    page: 'integrations',
     path: `${PATH_URLS.DASHBOARD_OWNER}/`,
     icon: <CreditCard size={25} />,
   },

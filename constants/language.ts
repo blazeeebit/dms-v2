@@ -22,7 +22,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
       content: {
         overview: 'overview',
         dormitories: 'dormitories',
-        billing: 'billing',
+        integrations: 'integrations',
         settings: 'settings',
         community: 'community',
         compare: 'compare',
@@ -32,7 +32,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
       content: {
         overview: 'genel bakış',
         dormitories: 'yatakhaneler',
-        billing: 'faturalandırma',
+        integrations: 'entegrasyonlar',
         settings: 'ayarlar',
         community: 'toplum',
         compare: 'karşılaştırmak',

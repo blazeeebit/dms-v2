@@ -4,12 +4,19 @@ import { Button } from '../ui/button'
 import { useStripe } from '@/hooks/use-payment-hooks'
 import { Loader } from '../loader'
 
-export const StripeConnect = () => {
-  const { onStripeConnect, onStripeAccountPending } = useStripe()
+type StripeConnectProps = {
+  connected: boolean
+  id: string
+}
+
+export const StripeConnect = ({ connected, id }: StripeConnectProps) => {
+  const { onStripeConnect, onStripeAccountPending } = useStripe(id)
   return (
     <div>
-      <Button className="w-[300px] h-[50px]" onClick={onStripeConnect}>
-        <Loader loading={onStripeAccountPending}>Connect to Stripe</Loader>
+      <Button disabled={connected} onClick={onStripeConnect}>
+        <Loader loading={onStripeAccountPending}>
+          {connected ? 'Connected' : 'Connect'}
+        </Loader>
       </Button>
     </div>
   )
