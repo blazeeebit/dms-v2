@@ -70,9 +70,8 @@ export async function GET(req: NextRequest) {
       }
     }
   } catch (error) {
-    console.error(
-      'An error occurred when calling the Stripe API to create an account:',
-      error
+    return new NextResponse(
+      'An error occurred when calling the Stripe API to create an account:'
     )
   }
 }
