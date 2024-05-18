@@ -23,7 +23,7 @@ const OwnerDormitoriesPage = async ({ params }: { params: { id: string } }) => {
           ownerDorms.dorms.map((dorm) => (
             <ListingCard
               userId={params.id}
-              payments={ownerDorms.payments}
+              payments={ownerDorms.payments as string}
               id={dorm.id}
               description={dorm.language[0].description}
               key={dorm.id}

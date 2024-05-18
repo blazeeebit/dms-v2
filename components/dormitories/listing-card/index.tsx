@@ -16,7 +16,7 @@ type ListingCardProps = {
   thumbnail: string
   active: boolean
   description: string
-  payments: boolean
+  payments: string
   userId: string
 }
 
@@ -49,7 +49,11 @@ export const ListingCard = ({
           </div>
         </Link>
         <div className="p-5">
-          <StatusSwitch payments={payments} id={id} active={active} />
+          <StatusSwitch
+            payments={payments ? true : false}
+            id={id}
+            active={active}
+          />
         </div>
       </CardContent>
     </Card>
