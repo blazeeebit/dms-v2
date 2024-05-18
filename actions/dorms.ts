@@ -103,7 +103,7 @@ export const onGetDormListings = async (id: string) => {
         owner: {
           select: {
             id: true,
-            payments: true,
+            stripeId: true,
           },
         },
       },
@@ -137,7 +137,7 @@ export const onGetDormListings = async (id: string) => {
         return {
           dorms: dormVarient,
           preference: ownerIdAndPreference.language,
-          payments: ownerIdAndPreference.owner[0].payments,
+          payments: ownerIdAndPreference.owner[0].stripeId,
         }
       }
     }
@@ -343,15 +343,15 @@ export const onGetAllDorms = async () => {
         location: true,
         gallery: true,
         active: true,
-        language:true,
+        language: true,
       },
-    });
+    })
 
-    return allDorms;
+    return allDorms
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 export const onGetDProfile = async (id: string) => {
   try {
@@ -368,13 +368,12 @@ export const onGetDProfile = async (id: string) => {
         featuredImage: true,
         gallery: true,
       },
-    });
+    })
 
     if (dormProfile) {
-      return dormProfile;
+      return dormProfile
     }
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
-
+}
