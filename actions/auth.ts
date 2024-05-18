@@ -2,20 +2,11 @@
 
 import { PATH_URLS } from '@/constants/routes'
 import { client } from '@/lib/prisma'
-import { RedirectToSignIn } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
-const onAuthenticated = async () => {
-  const user = await currentUser()
-
-  if (!user) RedirectToSignIn
-
-  return user
-}
-
 export const onBoardOauthUser = async () => {
-  const user = await onAuthenticated()
+  const user = await currentUser()
 
   if (user) {
     const role = await client.user.findUnique({
@@ -39,7 +30,7 @@ export const onBoardOauthUser = async () => {
 }
 
 export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
-  const user = await onAuthenticated()
+  const user = await currentUser()
 
   try {
     if (user) {
@@ -47,7 +38,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
         const onBoarded = await client.user.create({
           data: {
             clerkId: user.id,
-            username: user.emailAddresses[0].emailAddress.split('@')[0],
+            username: user.fullName as string,
             name: user.fullName as string,
             role: role,
             owner: {
@@ -60,6 +51,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
           },
           select: {
             id: true,
+            role: true,
           },
         })
 
@@ -68,6 +60,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
             status: 200,
             message: 'Owner Onboarding Complete',
             id: onBoarded.id,
+            role: onBoarded.role,
           }
         }
       }
@@ -76,7 +69,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
         const onBoarded = await client.user.create({
           data: {
             clerkId: user.id,
-            username: user.emailAddresses[0].emailAddress.split('@')[0],
+            username: user.fullName as string,
             name: user.fullName as string,
             role: role,
             student: {
@@ -85,6 +78,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
           },
           select: {
             id: true,
+            role: true,
           },
         })
 
@@ -93,6 +87,7 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
             status: 200,
             message: 'Student Onboarding Complete',
             id: onBoarded.id,
+            role: onBoarded.role,
           }
         }
       }

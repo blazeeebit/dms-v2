@@ -247,15 +247,20 @@ export const useOnBoarding = () => {
             title: onBoarded.status == 200 ? 'Success' : 'Error',
             description: onBoarded.message,
           })
+          console.log('On boarding success')
           setLoading(false)
-          if (values.role == 'OWNER') {
+          if (onBoarded.role == 'OWNER') {
+            console.log('On boarding success Owner')
             router.push(`/dashboard/owner/${onBoarded.id}/overview`)
           }
-          if (values.role == 'STUDENT') {
+          if (onBoarded.role == 'STUDENT') {
+            console.log('On boarding success Sutdnet')
             router.push(`/dashboard/student/${onBoarded.id}/overview`)
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+      }
     }
   )
   return { register, onCompleteOnBoarding, onUserType, setOnUserType, loading }
