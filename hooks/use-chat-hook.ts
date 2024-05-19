@@ -1,17 +1,16 @@
-import {
-  onGetMessages,
-  onGetOnlineStudents,
-  onGetStudentDetails,
-  onStoreMessage,
-} from '@/actions/realtime'
+import { onGetMessages, onStoreMessage } from '@/actions/realtime'
 import { supabaseClient } from '@/lib/utils'
 import { chatMessageProps, chatMessageSchema } from '@/schemas/chat.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { v4 as uuidv4 } from 'uuid'
 
-export const useChat = (id: string) => {
+export const useChat = (student: {
+  name: string
+  email: string
+  image: string
+  id: string
+}) => {
   const [openList, setOpenList] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [openChats, setOpenChats] = useState<
@@ -22,13 +21,12 @@ export const useChat = (id: string) => {
     }[]
   >([])
   const [onlineStudents, setOnlineStudents] = useState<
-    | {
-        id: string
-        name: string
-        email: string
-        image: string | null
-        online: boolean
-      }[]
+    {
+      name: string
+      email: string
+      id: string
+      image: string
+    }[]
   >([])
 
   const onCreateChatWindow = (id: string, image: string, name: string) =>
@@ -44,70 +42,40 @@ export const useChat = (id: string) => {
   const onRemoveChatWindow = (id: string) =>
     setOpenChats((prev) => prev.filter((window) => window.id !== id))
 
-  const onOnlineStudents = async () => {
-    try {
-      setLoading(true)
-      const students = await onGetOnlineStudents(id)
-      if (students) {
-        setOnlineStudents(students)
-        setLoading(false)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const onOpenChatList = () => setOpenList((prev) => !prev)
 
   useEffect(() => {
-    onOnlineStudents()
-  }, [])
+    const channel = supabaseClient.channel('tracking')
 
-  useEffect(() => {
-    supabaseClient
-      .channel('table-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'Student',
-        },
-        async (payload) => {
-          try {
-            if (payload.new.online) {
-              const onlineStudent = await onGetStudentDetails(
-                payload.new.userId
-              )
-              if (onlineStudent) {
-                const studentNotOnline = onlineStudents.find(
-                  (student) => student.id !== onlineStudent.id
-                )
-                if (!studentNotOnline) {
-                  setOnlineStudents((prevState) => [
-                    ...prevState,
-                    {
-                      id: onlineStudent.id,
-                      name: onlineStudent.name,
-                      email: onlineStudent.email,
-                      image: onlineStudent.image,
-                      online: payload.new.online,
-                    },
-                  ])
-                }
-              }
-            }
-            if (!payload.new.online) {
-              setOnlineStudents((prev) =>
-                prev.filter((student) => student.id !== payload.new.userId)
-              )
-            }
-          } catch (error) {
-            console.log(error)
-          }
+    channel
+      .on('presence', { event: 'sync' }, () => {
+        setLoading(true)
+        setOnlineStudents([])
+        const state: any = channel.presenceState()
+        for (const user in state) {
+          setOnlineStudents((prev: any) => [
+            ...prev,
+            {
+              name: state[user][0].name,
+              email: state[user][0].email,
+              id: state[user][0].id,
+              image: state[user][0].image,
+            },
+          ])
         }
-      )
-      .subscribe()
+        setLoading(false)
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await channel.track({
+            ...student,
+          })
+        }
+      })
+
+    return () => {
+      channel.unsubscribe()
+    }
   }, [])
 
   return {

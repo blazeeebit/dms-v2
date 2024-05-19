@@ -2,6 +2,7 @@ import { onStudentOffline } from '@/actions/realtime'
 import { onSetLanguagePreference } from '@/actions/translate'
 import { useToast } from '@/components/ui/use-toast'
 import { useProfileContext } from '@/context/use-profile-context'
+import { supabaseClient } from '@/lib/utils'
 import {
   EditDormContentProps,
   EditDormContentSchema,
@@ -56,8 +57,13 @@ export const useProfile = (
     if (user) onDispatch('LOGIN', { ...user })
   }, [])
 
+  const untrackPresence = async () => {
+    await supabaseClient.channel('tracking').untrack()
+  }
+
   const onLogout = async () => {
     if (user) {
+      untrackPresence()
       await onStudentOffline(id)
       signOut()
       onDispatch('LOGOUT', {

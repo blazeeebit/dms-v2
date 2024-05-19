@@ -1,4 +1,5 @@
 import { onGetUserInfo } from '@/actions/auth'
+import { onGetStudentDetails } from '@/actions/realtime'
 import { StudentChatList } from '@/components/chat'
 import { DashboardNavBar } from '@/components/navbar/dashboard-navbar'
 import { SideBar } from '@/components/sidebar'
@@ -17,6 +18,8 @@ const DashboardLayout = async ({
 
   if (loggedInUser?.role !== 'STUDENT') redirect('/dashboard')
 
+  const student = await onGetStudentDetails(params.id)
+
   return (
     <div className="container h-screen flex flex-col 2xl:p-0 lg:pl-28">
       <SideBar
@@ -33,7 +36,7 @@ const DashboardLayout = async ({
         }}
       />
       {children}
-      <StudentChatList id={params.id} studentId={loggedInUser.student[0].id} />
+      <StudentChatList student={student!} />
     </div>
   )
 }

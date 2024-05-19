@@ -9,11 +9,15 @@ import { Loader } from '../loader'
 import { ChatWindow } from './chat-window'
 
 type StudentChatListProps = {
-  id: string
-  studentId: string
+  student: {
+    name: string
+    email: string
+    image: string
+    id: string
+  }
 }
 
-export const StudentChatList = ({ id, studentId }: StudentChatListProps) => {
+export const StudentChatList = ({ student }: StudentChatListProps) => {
   const {
     onOpenChatList,
     openList,
@@ -22,7 +26,7 @@ export const StudentChatList = ({ id, studentId }: StudentChatListProps) => {
     onCreateChatWindow,
     openChats,
     onRemoveChatWindow,
-  } = useChat(studentId)
+  } = useChat(student)
 
   return (
     <div className="fixed bottom-10 right-10 flex gap-5 items-end">
@@ -31,7 +35,7 @@ export const StudentChatList = ({ id, studentId }: StudentChatListProps) => {
           <ChatWindow
             key={chat.id}
             {...chat}
-            userId={studentId}
+            userId={student.id}
             onClose={() => onRemoveChatWindow(chat.id)}
           />
         ))}
@@ -86,20 +90,19 @@ export const StudentChatList = ({ id, studentId }: StudentChatListProps) => {
             </div>
             <Loader loading={loading}>
               <div className="w-full flex-1 h-0 py-5 flex flex-col gap-2 overflow-y-scroll no-scroll-window">
-                {onlineStudents.length ? (
-                  onlineStudents.map((student) => (
-                    <StudentChatCard
-                      key={student.id}
-                      {...student}
-                      onChat={() =>
-                        onCreateChatWindow(
-                          student.id,
-                          student.image || '',
-                          student.name
-                        )
-                      }
-                    />
-                  ))
+                {onlineStudents.length > 1 ? (
+                  onlineStudents.map(
+                    (s) =>
+                      s.id !== student.id && (
+                        <StudentChatCard
+                          key={s.id}
+                          {...s}
+                          onChat={() =>
+                            onCreateChatWindow(s.id, s.image || '', s.name)
+                          }
+                        />
+                      )
+                  )
                 ) : (
                   <CardDescription>No Students Online</CardDescription>
                 )}

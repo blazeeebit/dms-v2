@@ -8,7 +8,6 @@ type StudentCardProps = {
   name: string
   email: string
   image: string | null
-  online: boolean
   onChat(): void
 }
 
@@ -16,7 +15,6 @@ export const StudentChatCard = ({
   name,
   email,
   image,
-  online,
   onChat,
 }: StudentCardProps) => {
   return (
@@ -32,12 +30,7 @@ export const StudentChatCard = ({
           <h2>{name}</h2>
           <CardDescription>{email}</CardDescription>
         </div>
-        <div
-          className={cn(
-            'rounded-full w-3 h-3',
-            online ? 'bg-green-500' : 'bg-gray-500'
-          )}
-        />
+        <div className={cn('rounded-full w-3 h-3 bg-green-500')} />
       </CardContent>
     </Card>
   )

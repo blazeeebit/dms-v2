@@ -38,7 +38,6 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
         const onBoarded = await client.user.create({
           data: {
             clerkId: user.id,
-            username: user.fullName as string,
             name: user.fullName as string,
             role: role,
             owner: {
@@ -69,7 +68,6 @@ export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
         const onBoarded = await client.user.create({
           data: {
             clerkId: user.id,
-            username: user.fullName as string,
             name: user.fullName as string,
             role: role,
             student: {
