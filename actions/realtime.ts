@@ -41,8 +41,12 @@ export const onGetStudentDetails = async (id: string) => {
       select: {
         name: true,
         clerkId: true,
-        id: true,
         image: true,
+        student: {
+          select: {
+            id: true,
+          },
+        },
       },
     })
 
@@ -52,7 +56,7 @@ export const onGetStudentDetails = async (id: string) => {
         name: student.name,
         email: userDetails.emailAddresses[0].emailAddress,
         image: student.image || userDetails.imageUrl,
-        id: student.id,
+        id: student.student[0].id,
       }
     }
   } catch (error) {

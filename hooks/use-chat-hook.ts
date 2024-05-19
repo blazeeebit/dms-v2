@@ -29,15 +29,19 @@ export const useChat = (student: {
     }[]
   >([])
 
-  const onCreateChatWindow = (id: string, image: string, name: string) =>
-    setOpenChats((prev) => [
-      ...prev,
-      {
-        id,
-        image,
-        name,
-      },
-    ])
+  const onCreateChatWindow = (id: string, image: string, name: string) => {
+    const duplicate = openChats.find((chat) => chat.id !== id)
+    if (!duplicate) {
+      setOpenChats((prev) => [
+        ...prev,
+        {
+          id,
+          image,
+          name,
+        },
+      ])
+    }
+  }
 
   const onRemoveChatWindow = (id: string) =>
     setOpenChats((prev) => prev.filter((window) => window.id !== id))
@@ -52,6 +56,7 @@ export const useChat = (student: {
         setLoading(true)
         setOnlineStudents([])
         const state: any = channel.presenceState()
+        console.log(channel.presenceState())
         for (const user in state) {
           setOnlineStudents((prev: any) => [
             ...prev,
