@@ -8,7 +8,6 @@ type ListingServiceProps = {
 export type CreateDormListingProps = {
   name: string
   thumbnail: any
-  price: string
   services: ListingServiceProps[]
   description: string
 }
@@ -18,8 +17,18 @@ export type EditDormContentProps = {
   description?: string
 }
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 2
-const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg']
+export type CreateDormRoomPlanProps = {
+  price: string
+  room: string
+}
+
+export type CreateReservationButtonProps = {
+  price: string
+  period: Date
+}
+
+export const MAX_UPLOAD_SIZE = 1024 * 1024 * 2
+export const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg']
 
 export const CreateDormListingSchema = z.object({
   name: z
@@ -34,7 +43,6 @@ export const CreateDormListingSchema = z.object({
     .refine((files) => ACCEPTED_FILE_TYPES.includes(files?.[0]?.type), {
       message: 'Only JPG, JPEG & PNG are accepted file formats',
     }),
-  price: z.string().min(1, { message: 'Price cannot be empty' }),
   services: z
     .array(
       z.object({
@@ -68,4 +76,15 @@ export const EditDormContentSchema = z.object({
       message: 'You must add a new description of atleast 100 words',
     })
     .optional(),
+  price: z.string().min(1, { message: 'You must add a new price' }).optional(),
+})
+
+export const CreateDormRoomPlanSchema = z.object({
+  price: z.string().min(1, { message: 'You must enter a valid price' }),
+  room: z.string().min(1, { message: 'You must select a room' }),
+})
+
+export const CreateBookingButtonSchema = z.object({
+  price: z.string().min(1, { message: 'You must enter a valid price' }),
+  period: z.coerce.date(),
 })

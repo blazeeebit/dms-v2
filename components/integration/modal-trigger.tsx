@@ -14,6 +14,9 @@ type IntegrationTriggerProps = {
     [key in 'stripe']: boolean
   }
   id: string
+  state: {
+    [key in 'connected' | 'connect']: string
+  }
 }
 
 export const IntegrationTrigger = ({
@@ -23,6 +26,7 @@ export const IntegrationTrigger = ({
   descrioption,
   connections,
   id,
+  state,
 }: IntegrationTriggerProps) => {
   return (
     <Modal
@@ -33,12 +37,17 @@ export const IntegrationTrigger = ({
       trigger={
         <Card className="px-3 py-2 cursor-pointer flex gap-2">
           <CloudIcon />
-          {connections[name] ? 'connected' : 'connect'}
+          {connections[name] ? state['connected'] : state['connect']}
         </Card>
       }
     >
       <Separator orientation="horizontal" />
-      <IntegrationModalBody id={id} connections={connections} type={name} />
+      <IntegrationModalBody
+        state={state}
+        id={id}
+        connections={connections}
+        type={name}
+      />
     </Modal>
   )
 }

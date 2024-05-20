@@ -30,4 +30,26 @@ export const onGetUserSubscription = async (id: string) => {
   }
 }
 
-export const onGetStripeIntegration = async (id: string) => {}
+export const onGetStripeIntegration = async (id: string) => {
+  try {
+    const stripeId = await client.owner.findUnique({
+      where: {
+        userId: id,
+      },
+      select: {
+        stripeId: true,
+        User: {
+          select: {
+            language: true,
+          },
+        },
+      },
+    })
+
+    if (stripeId) {
+      return stripeId
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

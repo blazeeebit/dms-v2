@@ -9,12 +9,16 @@ type IntegrationModalBodyProps = {
     [key in 'stripe']: boolean
   }
   id: string
+  state: {
+    [key in 'connected' | 'connect']: string
+  }
 }
 
 export const IntegrationModalBody = ({
   type,
   connections,
   id,
+  state,
 }: IntegrationModalBodyProps) => {
   switch (type) {
     case 'stripe':
@@ -34,7 +38,11 @@ export const IntegrationModalBody = ({
           ))}
           <div className="flex justify-between mt-10">
             <Button variant="outline">Learn more</Button>
-            <StripeConnect id={id} connected={connections['stripe']} />
+            <StripeConnect
+              state={state}
+              id={id}
+              connected={connections['stripe']}
+            />
           </div>
         </div>
       )

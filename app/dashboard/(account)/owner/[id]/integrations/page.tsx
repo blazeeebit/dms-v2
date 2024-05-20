@@ -1,14 +1,17 @@
+import { onGetStripeIntegration } from '@/actions/payment'
 import { IntegrationsList } from '@/components/integration'
 import React from 'react'
 
-const OwnerIntegration = ({ params }: { params: { id: string } }) => {
+const OwnerIntegration = async ({ params }: { params: { id: string } }) => {
+  const stripeId = await onGetStripeIntegration(params.id)
   return (
     <div>
       <IntegrationsList
         id={params.id}
         connections={{
-          stripe: false,
+          stripe: stripeId?.stripeId! ? true : false,
         }}
+        language={stripeId?.User?.language!}
       />
     </div>
   )

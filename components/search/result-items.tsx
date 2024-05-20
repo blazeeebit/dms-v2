@@ -11,6 +11,7 @@ type ResultItemsProps = {
   image: string
   email?: string
   description?: string
+  userId: string
 }
 
 export const ResultItems = ({
@@ -19,11 +20,12 @@ export const ResultItems = ({
   name,
   id,
   description,
+  userId,
 }: ResultItemsProps) => {
   switch (type) {
     case 'dorm':
       return (
-        <Link href={`/dorms/${id}`}>
+        <Link href={`/dorms/${id}/${userId}`}>
           <Card>
             <CardContent className="p-3 flex gap-3 dark:hover:bg-gray-800 transition duration-150 ease-in-out">
               <div className="w-16 rounded-lg overflow-hidden h-16 relative">
@@ -43,7 +45,7 @@ export const ResultItems = ({
       )
     case 'user':
       return (
-        <Link href={`/user/${id}`}>
+        <Link href={`/user/${id}${userId}`}>
           <Card>
             <CardContent className="p-3 flex gap-3 dark:hover:bg-gray-800 transition duration-150 ease-in-out">
               <div className="w-16 rounded-lg overflow-hidden h-16 relative">
@@ -51,11 +53,6 @@ export const ResultItems = ({
               </div>
               <div>
                 <CardTitle className="text-lg">{name}</CardTitle>
-                {/* <CardDescription>
-                  {description && description.length > 30
-                    ? description.substring(0, 30) + '...'
-                    : description}
-                </CardDescription> */}
               </div>
             </CardContent>
           </Card>

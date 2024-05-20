@@ -3,8 +3,12 @@ import { DormCard } from '@/components/dormitories/listing-card/dormlisting'
 import { CardDescription } from '@/components/ui/card'
 import React from 'react'
 
-const StudentDormitoriesPage = async () => {
-  const dorms = await onGetAllDorms()
+const StudentDormitoriesPage = async ({
+  params,
+}: {
+  params: { id: string }
+}) => {
+  const dorms = await onGetAllDorms(params.id)
 
   return (
     <div className="flex flex-col gap-10">

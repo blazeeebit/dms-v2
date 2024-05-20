@@ -4,17 +4,20 @@ import React from 'react'
 import { IntegrationTrigger } from './modal-trigger'
 import { Card, CardContent, CardDescription } from '../ui/card'
 import Image from 'next/image'
+import { DMS_CONTENT } from '@/constants/language'
 
 type IntegrationsListProps = {
   connections: {
     stripe: boolean
   }
   id: string
+  language: 'TURKISH' | 'ENGLISH'
 }
 
 export const IntegrationsList = ({
   connections,
   id,
+  language,
 }: IntegrationsListProps) => {
   return (
     <div className="flex-1 h-0 grid grid-cols-1 content-start lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -31,13 +34,18 @@ export const IntegrationsList = ({
               <IntegrationTrigger
                 id={id}
                 connections={connections}
-                title={item.title}
-                descrioption={item.modalDescription}
+                title={DMS_CONTENT.INTEGRATIONS[language].content.title}
+                descrioption={
+                  DMS_CONTENT.INTEGRATIONS[language].content.modelDescription
+                }
                 logo={item.logo}
                 name={item.name}
+                state={DMS_CONTENT.INTEGRATIONS[language].content}
               />
             </div>
-            <CardDescription>{item.description}</CardDescription>
+            <CardDescription>
+              {DMS_CONTENT.INTEGRATIONS[language].content.description}
+            </CardDescription>
           </CardContent>
         </Card>
       ))}

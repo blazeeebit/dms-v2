@@ -6,7 +6,6 @@ export const onCreateNewListing = async (
   id: string,
   listing: {
     title: string
-    price: string
     description: string
     image: string
     services: {
@@ -55,7 +54,6 @@ export const onCreateNewListing = async (
         data: {
           dorms: {
             create: {
-              price: listing.price,
               featuredImage: listing.image,
               service: {
                 create: listing.services,
@@ -114,6 +112,9 @@ export const onGetDormListings = async (id: string) => {
       const dormVarient = await client.dormitories.findMany({
         where: {
           ownerId: ownerIdAndPreference.owner[0].id,
+        },
+        orderBy: {
+          id: 'asc',
         },
         include: {
           service: {
@@ -214,7 +215,6 @@ export const onGetDormProfile = async (id: string, ownerId: string) => {
             },
             select: {
               id: true,
-              price: true,
               language: {
                 where: {
                   language: userLanguagePreference.language,
@@ -223,7 +223,26 @@ export const onGetDormProfile = async (id: string, ownerId: string) => {
               service: true,
               location: true,
               featuredImage: true,
-              gallery: true,
+              rooms: {
+                select: {
+                  id: true,
+                  price: true,
+                  type: true,
+                },
+              },
+              bookingPlan: {
+                select: {
+                  id: true,
+                  price: true,
+                  period: true,
+                },
+              },
+              gallery: {
+                select: {
+                  id: true,
+                  image: true,
+                },
+              },
             },
           },
         },
@@ -286,31 +305,58 @@ export const onSearchDormToCompare = async (query: string, id: string) => {
   }
 }
 
-export const onGetSingleCompareDorm = async (id: string, userId: string) => {
+export const onGetSingleCompareDorm = async (id: string) => {
+  try {
+    const dorm = await client.dormitories.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        featuredImage: true,
+        service: {
+          select: {
+            name: true,
+            icon: true,
+            rating: true,
+          },
+        },
+        language: {
+          select: {
+            language: true,
+            name: true,
+            description: true,
+          },
+        },
+      },
+    })
+
+    if (dorm) {
+      return dorm
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetAllDorms = async (id: string) => {
   try {
     const userLanguagePreference = await client.user.findUnique({
       where: {
-        id: userId,
+        id,
       },
       select: {
         language: true,
       },
     })
     if (userLanguagePreference) {
-      const dorm = await client.dormitories.findUnique({
-        where: {
-          id,
-        },
+      const allDorms = await client.dormitories.findMany({
         select: {
+          id: true,
           featuredImage: true,
-          price: true,
-          service: {
-            select: {
-              name: true,
-              icon: true,
-              rating: true,
-            },
-          },
+          service: true,
+          location: true,
+          gallery: true,
+          active: true,
           language: {
             where: {
               language: userLanguagePreference.language,
@@ -323,8 +369,64 @@ export const onGetSingleCompareDorm = async (id: string, userId: string) => {
         },
       })
 
-      if (dorm) {
-        return dorm
+      return allDorms
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onUpdateDormTitle = async (id: string, name: string) => {
+  try {
+    const languageSet = await client.dormitories.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        language: {
+          select: {
+            id: true,
+            language: true,
+          },
+        },
+      },
+    })
+
+    if (languageSet) {
+      const options = {
+        method: 'POST',
+        url: process.env.TRANSLATION_API_URL,
+        headers: {
+          'content-type': 'application/json',
+          'X-RapidAPI-Key': process.env.TRANSLATION_API_KEY,
+          'X-RapidAPI-Host': process.env.TRANSLATION_API_HOST,
+        },
+        data: {
+          q: name,
+          source: 'en',
+          target: 'tr',
+        },
+      }
+
+      const translation = await axios.request(options)
+
+      if (translation) {
+        for (const set in languageSet.language) {
+          await client.dormitoriesLanguage.update({
+            where: {
+              id: languageSet.language[set].id,
+              language: languageSet.language[set].language,
+            },
+            data: {
+              name:
+                languageSet.language[set].language == 'ENGLISH'
+                  ? name
+                  : translation.data.data.translations.translatedText,
+            },
+          })
+        }
+
+        return { status: 200, message: 'Title successfully updated' }
       }
     }
   } catch (error) {
@@ -332,46 +434,136 @@ export const onGetSingleCompareDorm = async (id: string, userId: string) => {
   }
 }
 
-export const onGetAllDorms = async () => {
+export const onUpdateDormDescription = async (
+  id: string,
+  description: string
+) => {
   try {
-    const allDorms = await client.dormitories.findMany({
+    const languageSet = await client.dormitories.findUnique({
+      where: {
+        id,
+      },
       select: {
-        id: true,
-        price: true,
-        featuredImage: true,
-        service: true,
-        location: true,
-        gallery: true,
-        active: true,
-        language: true,
+        language: {
+          select: {
+            id: true,
+            language: true,
+          },
+        },
       },
     })
 
-    return allDorms
+    if (languageSet) {
+      const options = {
+        method: 'POST',
+        url: process.env.TRANSLATION_API_URL,
+        headers: {
+          'content-type': 'application/json',
+          'X-RapidAPI-Key': process.env.TRANSLATION_API_KEY,
+          'X-RapidAPI-Host': process.env.TRANSLATION_API_HOST,
+        },
+        data: {
+          q: description,
+          source: 'en',
+          target: 'tr',
+        },
+      }
+
+      const translation = await axios.request(options)
+
+      if (translation) {
+        for (const set in languageSet.language) {
+          await client.dormitoriesLanguage.update({
+            where: {
+              id: languageSet.language[set].id,
+              language: languageSet.language[set].language,
+            },
+            data: {
+              description:
+                languageSet.language[set].language == 'ENGLISH'
+                  ? description
+                  : translation.data.data.translations.translatedText,
+            },
+          })
+        }
+
+        return { status: 200, message: 'Description successfully updated' }
+      }
+    }
   } catch (error) {
     console.log(error)
   }
 }
 
-export const onGetDProfile = async (id: string) => {
+export const onUploadGallery = async (id: string, file: string) => {
   try {
-    const dormProfile = await client.dormitories.findUnique({
+    await client.dormitories.update({
       where: {
         id,
       },
-      select: {
-        id: true,
-        price: true,
-        language: true,
-        service: true,
-        location: true,
-        featuredImage: true,
-        gallery: true,
+      data: {
+        gallery: {
+          create: {
+            image: file,
+          },
+        },
+      },
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onCreateRoomPlan = async (
+  id: string,
+  room: string,
+  price: string
+) => {
+  try {
+    const roomPlan = await client.dormitories.update({
+      where: {
+        id,
+      },
+      data: {
+        rooms: {
+          create: {
+            type: room,
+            price,
+          },
+        },
       },
     })
 
-    if (dormProfile) {
-      return dormProfile
+    if (roomPlan) {
+      return { status: 200, message: 'New room plan created' }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onCreateDormBookingButton = async (
+  id: string,
+  price: string,
+  period: Date
+) => {
+  try {
+    const button = await client.dormitories.update({
+      where: {
+        id,
+      },
+      data: {
+        bookingPlan: {
+          create: {
+            price,
+            period,
+          },
+        },
+      },
+    })
+
+    if (button) {
+      return { status: 200, message: 'Booking button added' }
     }
   } catch (error) {
     console.log(error)

@@ -7,6 +7,9 @@ type LANGUAGE_CONTENT = {
   SEARCH: LANGUAGE_PREFERENCE_PROPS
   SIDEBAR: LANGUAGE_PREFERENCE_PROPS
   UI_MODE: LANGUAGE_PREFERENCE_PROPS
+  INTEGRATIONS: LANGUAGE_PREFERENCE_PROPS
+  IMAGE_GALLERY: LANGUAGE_PREFERENCE_PROPS
+  PAYMENT_PLANS: LANGUAGE_PREFERENCE_PROPS
 }
 export const DMS_CONTENT: LANGUAGE_CONTENT = {
   SEARCH: {
@@ -52,6 +55,68 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
         light: 'Işık',
         dark: 'Karanlık',
         system: 'Sistem',
+      },
+    },
+  },
+  INTEGRATIONS: {
+    ENGLISH: {
+      content: {
+        connect: 'connect',
+        connected: 'connected',
+        title: 'Connect Stripe Account',
+        modelDescription:
+          'The world’s most successful platforms and marketplaces including Shopify and DoorDash, use Stripe Connect.',
+        description:
+          'Stripe is the fastest and easiest way to integrate payments and financial services into your software platform or marketplace.',
+      },
+    },
+    TURKISH: {
+      content: {
+        connect: 'bağlamak',
+        connected: 'bağlı',
+        title: 'Stripe Hesabını Bağla',
+        modelDescription:
+          'Shopify ve DoorDash dahil dünyanın en başarılı platformları ve pazaryerleri Stripe Connecti kullanıyor.',
+        description:
+          'Stripe, ödemeleri ve finansal hizmetleri yazılım platformunuza veya pazarınıza entegre etmenin en hızlı ve en kolay yoludur.',
+      },
+    },
+  },
+  IMAGE_GALLERY: {
+    ENGLISH: {
+      content: {
+        modal: {
+          title: 'Dorm image gallery',
+          description: 'Create an image gallery for your dorms!',
+        },
+      },
+    },
+    TURKISH: {
+      content: {
+        modal: {
+          title: 'Yurt resim galerisi',
+          description: 'Yurtlarınız için bir resim galerisi oluşturun!',
+        },
+      },
+    },
+  },
+  PAYMENT_PLANS: {
+    ENGLISH: {
+      content: {
+        modal: {
+          title: 'Create a payment plan',
+          description:
+            'Create a payment plan for your rooms for students to book/rent',
+        },
+      },
+    },
+    TURKISH: {
+      content: {
+        modal: {
+          title: 'Ödeme planı oluşturun',
+          description:
+            'Öğrencilerin rezervasyon yapması/kiralaması için odalarınız için bir ödeme planı oluşturun',
+        },
       },
     },
   },

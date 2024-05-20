@@ -31,6 +31,7 @@ type ResultsProps = {
   loading: boolean
   activeFilter?: string
   onFilter(filter: string): void
+  userId: string
 }
 
 export const Results = ({
@@ -38,6 +39,7 @@ export const Results = ({
   dorms,
   loading,
   activeFilter,
+  userId,
   onFilter,
 }: ResultsProps) => {
   const { loadingFilters, filters } = useResults()
@@ -74,6 +76,7 @@ export const Results = ({
         ) : activeFilter ? (
           dorms.map((dorm) => (
             <ResultItems
+              userId={userId}
               type="dorm"
               key={dorm.id}
               name={dorm.language[0].name}
@@ -85,6 +88,7 @@ export const Results = ({
         ) : (
           users.map((user) => (
             <ResultItems
+              userId={userId}
               type="user"
               key={user.id}
               name={user.name}

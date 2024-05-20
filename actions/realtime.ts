@@ -1,7 +1,7 @@
 'use server'
 
 import { client } from '@/lib/prisma'
-import { encryptionHandler } from '@/lib/utils'
+import { decryptionHandler, encryptionHandler } from '@/lib/utils'
 import { clerkClient, currentUser } from '@clerk/nextjs/server'
 
 export const onStudentOnline = async (id: string) => {
@@ -124,6 +124,7 @@ export const onStoreMessage = async (
   recieverId: string
 ) => {
   try {
+    const encryptedMessage = encryptionHandler(message)
     await client.student.update({
       where: {
         id: senderId,
@@ -131,7 +132,7 @@ export const onStoreMessage = async (
       data: {
         message: {
           create: {
-            message,
+            message: encryptedMessage,
             recieverId,
           },
         },
@@ -144,7 +145,6 @@ export const onStoreMessage = async (
 
 export const onGetMessages = async (senderId: string, recieverId: string) => {
   try {
-    console.log(senderId, recieverId)
     const messages = await client.message.findMany({
       where: {
         studentId: {
@@ -164,6 +164,9 @@ export const onGetMessages = async (senderId: string, recieverId: string) => {
     })
 
     if (messages) {
+      for (const message in messages) {
+        messages[message].message = decryptionHandler(messages[message].message)
+      }
       return messages
     }
   } catch (error) {

@@ -52,9 +52,13 @@ export const FormGenerator = ({
       )
     case 'select':
       return (
-        <Label htmlFor={`select-${label}`}>
+        <Label htmlFor={`select-${label}`} className="flex flex-col gap-2">
           {label && label}
-          <select id={`select-${label}`} {...register(name)}>
+          <select
+            id={`select-${label}`}
+            className="w-full bg-transparent border-[1px] p-3 rounded-lg"
+            {...register(name)}
+          >
             {options?.length &&
               options.map((option) => (
                 <option value={option.value} key={option.id}>
@@ -78,6 +82,7 @@ export const FormGenerator = ({
         <Label className="flex flex-col gap-2" htmlFor={`input-${label}`}>
           {label && label}
           <Textarea
+            className="border-none p-0"
             id={`input-${label}`}
             placeholder={placeholder}
             {...register(name)}

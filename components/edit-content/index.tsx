@@ -5,14 +5,24 @@ import React from 'react'
 import { FormGenerator } from '../forms/generator'
 import { Button } from '../ui/button'
 import { cn } from '@/lib/utils'
+import { Card } from '../ui/card'
+import { Loader } from '../loader'
 
 type EditContentProps = {
   children: React.ReactNode
   id: string
-  name: 'description' | 'name'
+  name: 'description' | 'name' | 'price'
+  description?: string
+  title?: string
 }
 
-export const EditContent = ({ children, id, name }: EditContentProps) => {
+export const EditContent = ({
+  children,
+  id,
+  name,
+  description,
+  title,
+}: EditContentProps) => {
   const {
     register,
     errors,
@@ -20,7 +30,8 @@ export const EditContent = ({ children, id, name }: EditContentProps) => {
     onEdit,
     onEnableEdit,
     onDisableEdit,
-  } = useEditDorm(id)
+    loading,
+  } = useEditDorm(id, name, description || title)
   return (
     <div
       className={cn(
@@ -33,24 +44,41 @@ export const EditContent = ({ children, id, name }: EditContentProps) => {
         {onEdit ? (
           <form onSubmit={onUpdateDorm} className="flex flex-col py-5 gap-3">
             {name == 'name' ? (
-              <FormGenerator
-                register={register}
-                name={name}
-                errors={errors}
-                type="text"
-                inputType="input"
-                placeholder="Change your dorm title"
-              />
+              <Loader loading={loading}>
+                <FormGenerator
+                  register={register}
+                  name={name}
+                  errors={errors}
+                  type="text"
+                  inputType="input"
+                  placeholder="Change your dorm title"
+                />
+              </Loader>
             ) : name == 'description' ? (
-              <FormGenerator
-                register={register}
-                name={name}
-                errors={errors}
-                type="text"
-                inputType="textarea"
-                lines={10}
-                placeholder="Change your dorm title"
-              />
+              <Loader loading={loading}>
+                <Card className="p-5">
+                  <FormGenerator
+                    register={register}
+                    name={name}
+                    errors={errors}
+                    type="text"
+                    inputType="textarea"
+                    lines={10}
+                    placeholder="Change your dorm description"
+                  />
+                </Card>
+              </Loader>
+            ) : name == 'price' ? (
+              <Loader loading={loading}>
+                <FormGenerator
+                  register={register}
+                  name={name}
+                  errors={errors}
+                  type="text"
+                  inputType="input"
+                  placeholder="Change your dorm price"
+                />
+              </Loader>
             ) : (
               <></>
             )}

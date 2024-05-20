@@ -12,6 +12,7 @@ import { SwiperSlide } from 'swiper/react'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { ErrorMessage } from '@hookform/error-message'
+import { DescriptionGeneration } from '@/components/ai/description-generation'
 
 type ListingFormProps = {
   id: string
@@ -34,6 +35,8 @@ export const ListingForm = ({ id, services }: ListingFormProps) => {
     loading,
     onAddService,
     services: serviceArray,
+    setValue,
+    name,
   } = useCreateDorm(id)
 
   return (
@@ -111,14 +114,32 @@ export const ListingForm = ({ id, services }: ListingFormProps) => {
           </div>
         )}
         <div className="w-full flex flex-col gap-5 mt-5">
-          {CREATE_LISTING_FORM.map((fields: FormProps) => (
-            <FormGenerator
-              key={fields.id}
-              {...fields}
-              register={register}
-              errors={errors}
-            />
-          ))}
+          {CREATE_LISTING_FORM.map((fields: FormProps) =>
+            fields.inputType == 'textarea' ? (
+              <Card key={fields.id} className="p-3 flex flex-col gap-2">
+                <FormGenerator
+                  {...fields}
+                  register={register}
+                  errors={errors}
+                />
+                <div className="flex justify-end">
+                  <DescriptionGeneration
+                    name={name}
+                    id={id}
+                    services={serviceArray}
+                    setDescription={setValue}
+                  />
+                </div>
+              </Card>
+            ) : (
+              <FormGenerator
+                key={fields.id}
+                {...fields}
+                register={register}
+                errors={errors}
+              />
+            )
+          )}
         </div>
         <div>
           <Button className="w-full">Create Listing</Button>

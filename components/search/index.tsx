@@ -16,9 +16,10 @@ const SearchResults = dynamic(
 type SearchBarProps = {
   className?: string
   language: 'ENGLISH' | 'TURKISH'
+  id: string
 }
 
-export const SearchBar = ({ className, language }: SearchBarProps) => {
+export const SearchBar = ({ className, language, id }: SearchBarProps) => {
   const {
     search,
     register,
@@ -41,6 +42,7 @@ export const SearchBar = ({ className, language }: SearchBarProps) => {
       </div>
       <SearchResults state={search}>
         <Results
+          userId={id}
           onFilter={onSetFilter}
           activeFilter={filter}
           users={userSearch}

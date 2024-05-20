@@ -55,13 +55,13 @@ export const onSearchQuery = async (
           }
           count++
         }
-        console.log(users)
         return { users: users }
       }
     }
     if (filter == 'dorm') {
       const result = await client.dormitories.findMany({
         where: {
+          active: true,
           language: {
             some: {
               name: {
@@ -69,34 +69,6 @@ export const onSearchQuery = async (
                 mode: 'insensitive',
               },
             },
-          },
-        },
-        select: {
-          id: true,
-          featuredImage: true,
-          language: {
-            where: {
-              language: language,
-            },
-            select: {
-              name: true,
-              description: true,
-            },
-          },
-        },
-        take: 5,
-      })
-
-      if (result) {
-        return { dorms: result }
-      }
-    }
-    if (filter == 'price') {
-      const result = await client.dormitories.findMany({
-        where: {
-          active: true,
-          price: {
-            lt: query,
           },
         },
         select: {

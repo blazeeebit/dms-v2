@@ -77,18 +77,56 @@ export const CREATE_LISTING_FORM: FormProps[] = [
   },
   {
     id: uuidv4(),
-    type: 'text',
-    inputType: 'input',
-    placeholder: 'Mention your price',
-    name: 'price',
-    label: 'Dorm Price',
-  },
-  {
-    id: uuidv4(),
     inputType: 'textarea',
     placeholder: 'Give a description that stands out',
     name: 'description',
     label: 'Dorm Description',
     lines: 20,
+  },
+]
+
+export const CREATE_DORM_ROOM_PAYMENT_PLAN: FormProps[] = [
+  {
+    id: uuidv4(),
+    type: 'text',
+    inputType: 'select',
+    placeholder: 'Select a room type',
+    name: 'room',
+    label: 'Dorm Room',
+    options: [
+      {
+        id: uuidv4(),
+        value: '1+1',
+        label: '1+1',
+      },
+      {
+        id: uuidv4(),
+        value: '2+1',
+        label: '2+1',
+      },
+      {
+        id: uuidv4(),
+        value: '3+1',
+        label: '3+1',
+      },
+      {
+        id: uuidv4(),
+        value: 'double + kitehen',
+        label: 'Double + Kitchen',
+      },
+      {
+        id: uuidv4(),
+        value: 'Single + kitehen',
+        label: 'Single + Kitchen',
+      },
+    ],
+  },
+  {
+    id: uuidv4(),
+    type: 'text',
+    inputType: 'input',
+    placeholder: 'Add a price for your room',
+    name: 'price',
+    label: 'Room Price',
   },
 ]

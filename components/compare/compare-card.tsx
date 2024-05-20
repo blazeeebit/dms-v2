@@ -23,8 +23,8 @@ export const CompareCard = ({ onDelete, id }: CompareCardProps) => {
     searchQuery,
     dormSearch,
     loadingDorm,
+    language,
   } = useCompareDorm(id)
-  console.log(id)
   return (
     <Card className="col-span-1">
       <CardContent className="py-5">
@@ -35,12 +35,22 @@ export const CompareCard = ({ onDelete, id }: CompareCardProps) => {
                 <Image src={compareDorm.featuredImage} alt="thumbnail" fill />
               </div>
               <div className="flex justify-between">
-                <CardTitle>{compareDorm.language[0].name}</CardTitle>
+                {compareDorm.language.map(
+                  (lang) =>
+                    lang.language == language && (
+                      <CardTitle key={lang.name}>{lang.name}</CardTitle>
+                    )
+                )}
                 <Trash onClick={onDelete} className="cursor-pointer" />
               </div>
-              <CardDescription>
-                {compareDorm.language[0].description}
-              </CardDescription>
+              {compareDorm.language.map(
+                (lang) =>
+                  lang.language == language && (
+                    <CardDescription key={lang.name}>
+                      {lang.description}
+                    </CardDescription>
+                  )
+              )}
               <div className="flex flex-wrap gap-3">
                 {compareDorm.service.map((service, i) => (
                   <ServiceChip
@@ -50,7 +60,6 @@ export const CompareCard = ({ onDelete, id }: CompareCardProps) => {
                   />
                 ))}
               </div>
-              <CardTitle className="text-3xl">${compareDorm.price}</CardTitle>
             </div>
           ) : (
             <>

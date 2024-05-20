@@ -1,6 +1,18 @@
+import { onCreateDormBookingButton, onCreateRoomPlan } from '@/actions/dorms'
 import { onGetUserSubscription } from '@/actions/payment'
+import { useToast } from '@/components/ui/use-toast'
+import { useProfileContext } from '@/context/use-profile-context'
+import {
+  CreateBookingButtonSchema,
+  CreateDormRoomPlanProps,
+  CreateDormRoomPlanSchema,
+  CreateReservationButtonProps,
+} from '@/schemas/list.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 export const useSubscription = (id: string) => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -49,4 +61,92 @@ export const useStripe = (id: string) => {
   }
 
   return { onStripeConnect, onStripeAccountPending }
+}
+
+export const usePaymentPlan = (id: string) => {
+  const { user } = useProfileContext()
+  const [loading, setLoading] = useState<boolean>(false)
+  const {
+    register,
+    formState: { errors },
+    reset,
+    handleSubmit,
+  } = useForm<CreateDormRoomPlanProps>({
+    resolver: zodResolver(CreateDormRoomPlanSchema),
+  })
+  const router = useRouter()
+  const { toast } = useToast()
+  const { language } = user
+
+  const onCreateARoom = handleSubmit(async (values) => {
+    try {
+      reset()
+      setLoading(true)
+      const plan = await onCreateRoomPlan(id, values.room, values.price)
+      if (plan) {
+        toast({
+          title: 'Success',
+          description: plan.message,
+        })
+        setLoading(false)
+        router.refresh()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  return { language, register, errors, onCreateARoom, loading }
+}
+
+export const useReservations = (id: string) => {
+  const {
+    register,
+    formState: { errors },
+    reset,
+    setValue,
+    handleSubmit,
+  } = useForm<CreateReservationButtonProps>({
+    resolver: zodResolver(CreateBookingButtonSchema),
+  })
+  const { toast } = useToast()
+  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [loading, setLoading] = useState<boolean>(false)
+  const router = useRouter()
+  const onCreateBookingButton = handleSubmit(async (values) => {
+    try {
+      reset()
+      setLoading(true)
+      const button = await onCreateDormBookingButton(
+        id,
+        values.price,
+        values.period
+      )
+      if (button) {
+        toast({
+          title: 'Success',
+          description: button.message,
+        })
+        setLoading(false)
+        router.refresh()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  useEffect(() => {
+    if (date) {
+      setValue('period', date)
+    }
+  }, [date])
+
+  return {
+    loading,
+    onCreateBookingButton,
+    register,
+    errors,
+    setDate,
+    date,
+  }
 }

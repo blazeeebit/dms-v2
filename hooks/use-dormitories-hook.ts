@@ -3,12 +3,14 @@ import {
   onCreateNewListing,
   onGetSingleCompareDorm,
   onSearchDormToCompare,
+  onUploadGallery,
 } from '@/actions/dorms'
 import { useToast } from '@/components/ui/use-toast'
 import { useProfileContext } from '@/context/use-profile-context'
 import {
   CreateDormListingProps,
   CreateDormListingSchema,
+  MAX_UPLOAD_SIZE,
 } from '@/schemas/list.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
@@ -24,6 +26,7 @@ export const useCreateDorm = (id: string) => {
     handleSubmit,
     reset,
     setValue,
+    getValues,
   } = useForm<CreateDormListingProps>({
     resolver: zodResolver(CreateDormListingSchema),
     defaultValues: {
@@ -37,6 +40,8 @@ export const useCreateDorm = (id: string) => {
   const [services, setServices] = useState<{ name: string; icon: string }[]>([])
   const { toast } = useToast()
   const router = useRouter()
+
+  const name = getValues('name')
 
   useEffect(() => {
     const imagePreview = watch((value) => {
@@ -82,7 +87,6 @@ export const useCreateDorm = (id: string) => {
         if (upload) {
           const dorm = await onCreateNewListing(id, {
             title: values.name,
-            price: values.price,
             description: values.description,
             image: upload.data.secure_url,
             services: services,
@@ -98,7 +102,9 @@ export const useCreateDorm = (id: string) => {
             router.refresh()
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error)
+      }
     }
   )
 
@@ -111,6 +117,8 @@ export const useCreateDorm = (id: string) => {
     loading,
     services,
     onAddService,
+    setValue,
+    name,
   }
 }
 
@@ -160,9 +168,9 @@ export const useCompareDorm = (userid: string) => {
       icon: string
       rating: number
     }[]
-    price: string
     featuredImage: string
     language: {
+      language: 'TURKISH' | 'ENGLISH'
       name: string
       description: string
     }[]
@@ -186,12 +194,14 @@ export const useCompareDorm = (userid: string) => {
   const onSelectDorm = async (id: string) => {
     try {
       setLoadingDorm(true)
-      const dorm = await onGetSingleCompareDorm(id, userid)
+      const dorm = await onGetSingleCompareDorm(id)
       if (dorm) {
         setCompareDorm(dorm)
         setLoadingDorm(false)
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -219,5 +229,80 @@ export const useCompareDorm = (userid: string) => {
     loadingDorm,
     dormSearch,
     register,
+    language,
+  }
+}
+
+export const useImageGallery = (id: string) => {
+  const { toast } = useToast()
+  const router = useRouter()
+  const [files, setFiles] = useState<File[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const { user } = useProfileContext()
+  const { language } = user
+  const onSetMultiFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (e.target.files) {
+        if (e.target.files.length > 4) {
+          toast({
+            title: 'Error',
+            description: 'You can not upload more then 4 files!',
+          })
+        } else {
+          const invalidFile = Array.from(e.target.files).find(
+            (f) => f.size > MAX_UPLOAD_SIZE
+          )
+          if (invalidFile) {
+            toast({
+              title: 'Error',
+              description: 'You can not upload a file that exceed 2mb',
+            })
+          }
+          if (!invalidFile) {
+            setFiles(Array.from(e.target.files))
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const onRemoveImagePreview = (index: number) =>
+    setFiles((prev) => prev.filter((f, i) => i !== index))
+
+  const onSaveGallery = async () => {
+    try {
+      setLoading(true)
+      let file = 0
+      while (file < files.length) {
+        const imageForm = new FormData()
+        imageForm.append('upload_preset', 'j9xoh6yu')
+        imageForm.append('file', files[file])
+        const upload = await axios.post(
+          process.env.NEXT_PUBLIC_CLOUDINARY_API_UPLOAD as string,
+          imageForm
+        )
+        if (upload) {
+          await onUploadGallery(id, upload.data.secure_url)
+        }
+        file++
+      }
+      toast({
+        title: 'Success',
+        description: 'Gallery successfully updated',
+      })
+      setLoading(false)
+      router.refresh()
+    } catch (error) {}
+  }
+
+  return {
+    onSetMultiFile,
+    language,
+    files,
+    loading,
+    onRemoveImagePreview,
+    onSaveGallery,
   }
 }

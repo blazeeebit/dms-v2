@@ -7,15 +7,18 @@ import { Loader } from '../loader'
 type StripeConnectProps = {
   connected: boolean
   id: string
+  state: {
+    [key in 'connected' | 'connect']: string
+  }
 }
 
-export const StripeConnect = ({ connected, id }: StripeConnectProps) => {
+export const StripeConnect = ({ connected, id, state }: StripeConnectProps) => {
   const { onStripeConnect, onStripeAccountPending } = useStripe(id)
   return (
     <div>
       <Button disabled={connected} onClick={onStripeConnect}>
         <Loader loading={onStripeAccountPending}>
-          {connected ? 'Connected' : 'Connect'}
+          {connected ? state['connected'] : state['connect']}
         </Loader>
       </Button>
     </div>
