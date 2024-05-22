@@ -2,7 +2,7 @@
 
 import { client } from '@/lib/prisma'
 import { decryptionHandler, encryptionHandler } from '@/lib/utils'
-import { clerkClient, currentUser } from '@clerk/nextjs/server'
+import { clerkClient } from '@clerk/nextjs/server'
 
 export const onStudentOnline = async (id: string) => {
   try {
@@ -124,7 +124,6 @@ export const onStoreMessage = async (
   recieverId: string
 ) => {
   try {
-    const encryptedMessage = encryptionHandler(message)
     await client.student.update({
       where: {
         id: senderId,
@@ -132,7 +131,7 @@ export const onStoreMessage = async (
       data: {
         message: {
           create: {
-            message: encryptedMessage,
+            message: message,
             recieverId,
           },
         },
@@ -164,9 +163,6 @@ export const onGetMessages = async (senderId: string, recieverId: string) => {
     })
 
     if (messages) {
-      for (const message in messages) {
-        messages[message].message = decryptionHandler(messages[message].message)
-      }
       return messages
     }
   } catch (error) {
