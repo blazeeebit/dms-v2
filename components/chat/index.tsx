@@ -68,14 +68,14 @@ export const StudentChatList = ({ student }: StudentChatListProps) => {
               },
             }}
             onClick={onOpenChatList}
-            className="h-full w-full flex justify-center items-center cursor-pointer"
+            className="h-full w-full bg-muted flex justify-center items-center cursor-pointer"
           >
             <MessageCircleMore />
           </motion.div>
         )}
         {openList && (
           <motion.div
-            className="p-5 flex flex-col h-full"
+            className="p-5 flex flex-col h-full bg-muted"
             initial={{
               opacity: 0,
             }}

@@ -1,6 +1,7 @@
 'use server'
 import { client } from '@/lib/prisma'
 import axios from 'axios'
+import { revalidatePath } from 'next/cache'
 
 export const onCreateNewListing = async (
   id: string,
@@ -215,7 +216,14 @@ export const onGetDormProfile = async (id: string, ownerId: string) => {
               language: userLanguagePreference.language,
             },
           },
-          service: true,
+          service: {
+            select: {
+              id: true,
+              rating: true,
+              name: true,
+              icon: true,
+            },
+          },
           location: true,
           featuredImage: true,
           Owner: {
@@ -315,7 +323,6 @@ export const onGetSingleCompareDorm = async (id: string) => {
           select: {
             name: true,
             icon: true,
-            rating: true,
           },
         },
         language: {
@@ -682,6 +689,140 @@ export const onCheckIfStudentRented = async (
       return true
     }
     return false
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onRateDormService = async (
+  id: string,
+  ratings: number,
+  studentId: string
+) => {
+  try {
+    const rated = await client.service.update({
+      where: {
+        id,
+      },
+      data: {
+        rating: {
+          create: {
+            rating: ratings,
+            studentId,
+          },
+        },
+      },
+    })
+    if (rated) {
+      return { status: 200, message: 'Thank you for rating us!' }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onPostNewReview = async (
+  dormId: string,
+  studentId: string,
+  review: string
+) => {
+  try {
+    const reviewed = await client.dormitories.update({
+      where: {
+        id: dormId,
+      },
+      data: {
+        review: {
+          create: {
+            studentId,
+            review,
+          },
+        },
+      },
+    })
+
+    if (reviewed) {
+      return { status: 200, message: 'Your review has been posted' }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetDormReviewForUser = async (
+  dormId: string,
+  studentId: string
+) => {
+  try {
+    const studentReview = await client.dormitories.findUnique({
+      where: {
+        id: dormId,
+      },
+      select: {
+        review: {
+          where: {
+            studentId,
+          },
+          select: {
+            review: true,
+          },
+        },
+      },
+    })
+
+    if (studentReview && studentReview.review) {
+      return studentReview.review
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetAllDormReviews = async (dormId: string) => {
+  try {
+    const reviews = await client.dormitories.findMany({
+      where: {
+        id: dormId,
+      },
+      select: {
+        review: {
+          select: {
+            studentId: true,
+            review: true,
+          },
+          take: 5,
+        },
+      },
+    })
+
+    if (reviews) {
+      return reviews
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetTotalRating = async (dormId: string) => {
+  try {
+    const rating = await client.rating.findMany({
+      where: {
+        Service: {
+          dormitoriesId: dormId,
+        },
+      },
+      select: {
+        rating: true,
+      },
+    })
+
+    if (rating) {
+      const totalRating = rating.reduce((total, next) => {
+        return total + next.rating
+      }, 0)
+
+      return totalRating / rating.length
+    }
   } catch (error) {
     console.log(error)
   }

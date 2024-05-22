@@ -2,6 +2,8 @@ import {
   onActiveateDorm,
   onCreateNewListing,
   onGetSingleCompareDorm,
+  onPostNewReview,
+  onRateDormService,
   onSearchDormToCompare,
   onUploadGallery,
 } from '@/actions/dorms'
@@ -10,6 +12,8 @@ import { useProfileContext } from '@/context/use-profile-context'
 import {
   CreateDormListingProps,
   CreateDormListingSchema,
+  CreateDormReviewProps,
+  CreateDormReviewSchema,
   MAX_UPLOAD_SIZE,
 } from '@/schemas/list.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -166,7 +170,6 @@ export const useCompareDorm = (userid: string) => {
     service: {
       name: string
       icon: string
-      rating: number
     }[]
     featuredImage: string
     language: {
@@ -305,4 +308,76 @@ export const useImageGallery = (id: string) => {
     onRemoveImagePreview,
     onSaveGallery,
   }
+}
+
+export const useRating = (rating: number, id: string, studentId: string) => {
+  const [onMouseOver, setOnMouseOver] = useState<number>(rating)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const onHighLightStars = (rating: number) => setOnMouseOver(rating)
+
+  const onLeaveRatingStar = () => setOnMouseOver(0)
+
+  const onRateService = async (rate: number) => {
+    try {
+      setLoading(true)
+      const rated = await onRateDormService(id, rate, studentId)
+      if (rated) {
+        toast({
+          title: 'Success',
+          description: rated.message,
+        })
+      }
+      setLoading(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return {
+    onHighLightStars,
+    onMouseOver,
+    onLeaveRatingStar,
+    loading,
+    onRateService,
+  }
+}
+
+export const useReview = (dormId: string, studentId: string) => {
+  const {
+    handleSubmit,
+    reset,
+    register,
+    formState: { errors },
+  } = useForm<CreateDormReviewProps>({
+    resolver: zodResolver(CreateDormReviewSchema),
+  })
+
+  const { toast } = useToast()
+
+  const [loading, setLoading] = useState<boolean>(false)
+  const router = useRouter()
+  const onPostReview = handleSubmit(async (values) => {
+    try {
+      setLoading(true)
+      reset()
+      const reviewed = await onPostNewReview(dormId, studentId, values.review)
+      if (reviewed) {
+        toast({
+          title: 'Success',
+          description: reviewed.message,
+        })
+      }
+      setLoading(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  return { loading, onPostReview, register, errors }
 }

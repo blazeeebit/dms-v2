@@ -74,6 +74,7 @@ model Dormitories {
 
   bookingPlan BookingPlan[]
   rooms       Room[]
+  review      Review[]
 
   language DormitoriesLanguage[]
   service  Service[]
@@ -92,7 +93,7 @@ model Service {
   id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name          String
   icon          String
-  rating        Int          @default(0)
+  rating        Rating[]
   Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
   dormitoriesId String?      @db.Uuid
 }
@@ -113,7 +114,7 @@ model Message {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   message    String
   createdAt  DateTime @default(now())
-  Student    Student? @relation(fields: [studentId], references: [id])
+  Student    Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId  String?  @db.Uuid
   recieverId String   @db.Uuid
 }
@@ -157,6 +158,23 @@ model Room {
   dormitoriesId String?        @db.Uuid
   reservations  Reservations[]
   rented        Rented[]
+}
+
+model Review {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  review        String
+  createdAt     DateTime     @default(now())
+  studentId     String?      @db.Uuid
+  Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
+  dormitoriesId String?      @db.Uuid
+}
+
+model Rating {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  rating    Int      @default(0)
+  Service   Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId String?  @db.Uuid
+  studentId String   @db.Uuid
 }
 
 enum Role {

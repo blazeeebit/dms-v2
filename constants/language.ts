@@ -12,6 +12,7 @@ type LANGUAGE_CONTENT = {
   PAYMENT_PLANS: LANGUAGE_PREFERENCE_PROPS
   MAKE_BOOKING: LANGUAGE_PREFERENCE_PROPS
   ROOM_PAYMENT: LANGUAGE_PREFERENCE_PROPS
+  RATING: LANGUAGE_PREFERENCE_PROPS
 }
 export const DMS_CONTENT: LANGUAGE_CONTENT = {
   SEARCH: {
@@ -157,6 +158,20 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
           description:
             'Hemen odanızı onaylayın. Ödemenin tamamını buradan yapın!',
         },
+      },
+    },
+  },
+  RATING: {
+    ENGLISH: {
+      content: {
+        title: 'Rate Our Services',
+        description: 'Hey! if you have a minute give us a quick rating',
+      },
+    },
+    TURKISH: {
+      content: {
+        title: 'Hizmetlerimizi Değerlendirin',
+        description: 'Hey! Bir dakikanız varsa bize hızlı bir puan verin',
       },
     },
   },

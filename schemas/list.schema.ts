@@ -31,6 +31,10 @@ export type CreateBookingButtonStudentProps = {
   room: string
 }
 
+export type CreateDormReviewProps = {
+  review: string
+}
+
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 2
 export const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg']
 
@@ -95,4 +99,8 @@ export const CreateBookingButtonSchema = z.object({
 
 export const CreateBookingButtonStudentSchema = z.object({
   room: z.string().min(1, { message: 'You must pick a room' }),
+})
+
+export const CreateDormReviewSchema = z.object({
+  review: z.string().min(1, { message: 'Your review must not be empty' }),
 })

@@ -41,7 +41,7 @@ export const PaymentPlansSection = ({
     usePaymentPlan(id)
 
   return (
-    <div className="flex gap-5 my-5 pl-5">
+    <div className="flex gap-5 my-5">
       {!payment && (
         <div>
           <Modal
