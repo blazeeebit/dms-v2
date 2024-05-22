@@ -13,9 +13,10 @@ const StudentDormitoriesPage = async ({
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-5">
-        {dorms?.length ? (
+        {dorms && dorms.length ? (
           dorms.map((dorm) => (
             <DormCard
+              userId={params.id}
               id={dorm.id}
               description={dorm.language[0].description}
               key={dorm.id}

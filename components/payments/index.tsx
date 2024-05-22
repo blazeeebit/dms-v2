@@ -6,13 +6,13 @@ import { usePaymentPlan } from '@/hooks/use-payment-hooks'
 import { DMS_CONTENT } from '@/constants/language'
 import { CircleDollarSign, Plus } from 'lucide-react'
 import { Tooltip } from '../tooltip'
-import { EditContent } from '../edit-content'
 import { CREATE_DORM_ROOM_PAYMENT_PLAN } from '@/constants/form'
 import { FormGenerator } from '../forms/generator'
 import { Button } from '../ui/button'
 import { Loader } from '../loader'
 import { Slider } from '../slider'
 import { SwiperSlide } from 'swiper/react'
+import { StripeElements } from '../stripe/stripe-elements'
 
 type PaymentPlansSectionProps = {
   id: string
@@ -21,54 +21,67 @@ type PaymentPlansSectionProps = {
     price: string
     type: string
   }[]
+  payment?: boolean
+  booking?: string
+  booked?: boolean
+  stripeId?: string
+  studentId?: string
 }
 
 export const PaymentPlansSection = ({
   id,
   rooms,
+  payment,
+  stripeId,
+  studentId,
+  booking,
+  booked,
 }: PaymentPlansSectionProps) => {
   const { language, register, errors, onCreateARoom, loading } =
     usePaymentPlan(id)
+
   return (
     <div className="flex gap-5 my-5 pl-5">
-      <div>
-        <Modal
-          className="max-w-xl"
-          title={DMS_CONTENT.PAYMENT_PLANS[language].content.modal.title}
-          description={
-            DMS_CONTENT.PAYMENT_PLANS[language].content.modal.description
-          }
-          trigger={
-            <div>
-              <Tooltip
-                trigger={
-                  <Card className="bg-muted cursor-pointer">
-                    <CardContent className="p-12">
-                      <Plus />
-                    </CardContent>
-                  </Card>
-                }
-              >
-                {DMS_CONTENT.PAYMENT_PLANS[language].content.modal.title}
-              </Tooltip>
-            </div>
-          }
-        >
-          <form onSubmit={onCreateARoom} className="flex flex-col gap-3">
-            {CREATE_DORM_ROOM_PAYMENT_PLAN.map((form) => (
-              <FormGenerator
-                key={form.id}
-                {...form}
-                register={register}
-                errors={errors}
-              />
-            ))}
-            <Button>
-              <Loader loading={loading}>Create a room</Loader>
-            </Button>
-          </form>
-        </Modal>
-      </div>
+      {!payment && (
+        <div>
+          <Modal
+            className="max-w-xl"
+            title={DMS_CONTENT.PAYMENT_PLANS[language].content.modal.title}
+            description={
+              DMS_CONTENT.PAYMENT_PLANS[language].content.modal.description
+            }
+            trigger={
+              <div>
+                <Tooltip
+                  trigger={
+                    <Card className="bg-muted cursor-pointer">
+                      <CardContent className="p-12">
+                        <Plus />
+                      </CardContent>
+                    </Card>
+                  }
+                >
+                  {DMS_CONTENT.PAYMENT_PLANS[language].content.modal.title}
+                </Tooltip>
+              </div>
+            }
+          >
+            <form onSubmit={onCreateARoom} className="flex flex-col gap-3">
+              {CREATE_DORM_ROOM_PAYMENT_PLAN.map((form) => (
+                <FormGenerator
+                  key={form.id}
+                  {...form}
+                  register={register}
+                  errors={errors}
+                />
+              ))}
+              <Button>
+                <Loader loading={loading}>Create a room</Loader>
+              </Button>
+            </form>
+          </Modal>
+        </div>
+      )}
       {rooms && (
         <div className="flex-1 w-0">
           <Slider
@@ -78,19 +91,57 @@ export const PaymentPlansSection = ({
                 slidesPerView: 2.2,
               },
               1200: {
-                slidesPerView: 3.3,
+                slidesPerView: payment ? 2.6 : 3.3,
               },
             }}
           >
             {rooms.map((room) => (
               <SwiperSlide key={room.id}>
-                <Card className="flex items-center pl-5 py-5 cursor-pointer">
-                  <CardContent className="p-0">
-                    <CircleDollarSign />
-                    <div className="mt-3">
-                      <CardDescription>{room.type} Room</CardDescription>
-                      <CardTitle>${room.price}</CardTitle>
+                <Card className="flex items-center p-5 cursor-pointer">
+                  <CardContent className="p-0 flex w-full">
+                    <div>
+                      <CircleDollarSign />
+                      <div className="mt-3">
+                        <CardDescription>{room.type} Room</CardDescription>
+                        <CardTitle>
+                          $
+                          {booked
+                            ? parseInt(room.price) - parseInt(booking!)
+                            : room.price}
+                        </CardTitle>
+                      </div>
                     </div>
+                    {payment && (
+                      <div className="flex items-end justify-end flex-1">
+                        <Modal
+                          className="max-w-xl"
+                          trigger={
+                            <Card className="cursor-pointer hover:bg-muted py-2 px-5">
+                              <CardDescription>Pay now</CardDescription>
+                            </Card>
+                          }
+                          title={
+                            DMS_CONTENT.PAYMENT_PLANS[language].content.modal
+                              .title
+                          }
+                          description={
+                            DMS_CONTENT.PAYMENT_PLANS[language].content.modal
+                              .description
+                          }
+                        >
+                          <StripeElements
+                            price={room.price}
+                            id={id}
+                            roomId={room.id}
+                            room={payment}
+                            booked={booked}
+                            booking={booking}
+                            stripeId={stripeId!}
+                            studentId={studentId!}
+                          />
+                        </Modal>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </SwiperSlide>

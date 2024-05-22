@@ -27,6 +27,10 @@ export type CreateReservationButtonProps = {
   period: Date
 }
 
+export type CreateBookingButtonStudentProps = {
+  room: string
+}
+
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 2
 export const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg']
 
@@ -87,4 +91,8 @@ export const CreateDormRoomPlanSchema = z.object({
 export const CreateBookingButtonSchema = z.object({
   price: z.string().min(1, { message: 'You must enter a valid price' }),
   period: z.coerce.date(),
+})
+
+export const CreateBookingButtonStudentSchema = z.object({
+  room: z.string().min(1, { message: 'You must pick a room' }),
 })

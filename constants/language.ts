@@ -10,6 +10,8 @@ type LANGUAGE_CONTENT = {
   INTEGRATIONS: LANGUAGE_PREFERENCE_PROPS
   IMAGE_GALLERY: LANGUAGE_PREFERENCE_PROPS
   PAYMENT_PLANS: LANGUAGE_PREFERENCE_PROPS
+  MAKE_BOOKING: LANGUAGE_PREFERENCE_PROPS
+  ROOM_PAYMENT: LANGUAGE_PREFERENCE_PROPS
 }
 export const DMS_CONTENT: LANGUAGE_CONTENT = {
   SEARCH: {
@@ -116,6 +118,44 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
           title: 'Ödeme planı oluşturun',
           description:
             'Öğrencilerin rezervasyon yapması/kiralaması için odalarınız için bir ödeme planı oluşturun',
+        },
+      },
+    },
+  },
+  MAKE_BOOKING: {
+    ENGLISH: {
+      content: {
+        modal: {
+          title: 'Book a room',
+          description: 'Book your favourite room in advance. Pay on arrival',
+        },
+      },
+    },
+    TURKISH: {
+      content: {
+        modal: {
+          title: 'Kitap Odası',
+          description: 'Favori odanızı önceden ayırtın. Varışta ödeme yapın',
+        },
+      },
+    },
+  },
+  ROOM_PAYMENT: {
+    ENGLISH: {
+      content: {
+        modal: {
+          title: 'Pay for room',
+          description:
+            'Confirm your room right away. Make the complete payment here!',
+        },
+      },
+    },
+    TURKISH: {
+      content: {
+        modal: {
+          title: 'Oda için ödeme yapın',
+          description:
+            'Hemen odanızı onaylayın. Ödemenin tamamını buradan yapın!',
         },
       },
     },

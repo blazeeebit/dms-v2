@@ -1,9 +1,19 @@
-import { onCreateDormBookingButton, onCreateRoomPlan } from '@/actions/dorms'
-import { onGetUserSubscription } from '@/actions/payment'
+import {
+  onCreateBooking,
+  onCreateDormBookingButton,
+  onCreateRoomPlan,
+} from '@/actions/dorms'
+import {
+  onCreateCustomerPaymentIntentSecret,
+  onGetUserSubscription,
+  onRoomRented,
+} from '@/actions/payment'
 import { useToast } from '@/components/ui/use-toast'
 import { useProfileContext } from '@/context/use-profile-context'
 import {
   CreateBookingButtonSchema,
+  CreateBookingButtonStudentProps,
+  CreateBookingButtonStudentSchema,
   CreateDormRoomPlanProps,
   CreateDormRoomPlanSchema,
   CreateReservationButtonProps,
@@ -13,6 +23,10 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import {
+  useElements,
+  useStripe as useStripeHook,
+} from '@stripe/react-stripe-js'
 
 export const useSubscription = (id: string) => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -149,4 +163,102 @@ export const useReservations = (id: string) => {
     setDate,
     date,
   }
+}
+
+export const useStudentBooking = (
+  id: string,
+  studentId: string,
+  room?: boolean,
+  roomId?: string
+) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const stripe = useStripeHook()
+  const elements = useElements()
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<CreateBookingButtonStudentProps>({
+    resolver: zodResolver(CreateBookingButtonStudentSchema),
+    defaultValues: {
+      room: '1+1',
+    },
+  })
+  const { toast } = useToast()
+  const router = useRouter()
+  const onBookRoom = handleSubmit(async (values) => {
+    try {
+      if (!stripe || !elements) {
+        return null
+      }
+
+      setLoading(true)
+
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: 'http://localhost:3000/dashboard',
+        },
+        redirect: 'if_required',
+      })
+
+      if (error) {
+        toast({
+          title: 'Error',
+          description: error.message,
+        })
+      }
+
+      if (paymentIntent?.status === 'succeeded') {
+        if (!room) {
+          const booking = await onCreateBooking(id, studentId, values.room)
+          if (booking) {
+            toast({
+              title: 'Success',
+              description: booking.message,
+            })
+          }
+        }
+        if (room && roomId) {
+          const rented = await onRoomRented(roomId, studentId)
+          if (rented) {
+            toast({
+              title: 'Success',
+              description: rented.message,
+            })
+          }
+        }
+      }
+
+      setLoading(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  return { register, errors, loading, onBookRoom }
+}
+
+export const useStripeCustomer = (amount: number, stripeId: string) => {
+  const [stripeSecret, setStripeSecret] = useState<string>('')
+  const [loadForm, setLoadForm] = useState<boolean>(false)
+  const onGetCustomerIntent = async (amount: number) => {
+    try {
+      setLoadForm(true)
+      const intent = await onCreateCustomerPaymentIntentSecret(amount, stripeId)
+      if (intent) {
+        setLoadForm(false)
+        setStripeSecret(intent.secret!)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    onGetCustomerIntent(amount)
+  }, [])
+
+  return { stripeSecret, loadForm }
 }

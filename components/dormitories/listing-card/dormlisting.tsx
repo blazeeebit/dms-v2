@@ -7,14 +7,12 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { StatusSwitch } from './status-switch'
-import { PATH_URLS } from '@/constants/routes'
 
 type ListingCardProps = {
   id: string
   title: string
   thumbnail: string
-
+  userId: string
   description: string
 }
 
@@ -22,14 +20,14 @@ export const DormCard = ({
   id,
   thumbnail,
   title,
-
+  userId,
   description,
 }: ListingCardProps) => {
   return (
     <Card className="w-full dark:hover:bg-gray-900 hover:bg-cream transition duration-150 ease-in-out">
       <CardContent className="p-0 flex">
         <Link
-          href={`/dorms/${id}`}
+          href={`/dorms/${id}/${userId}`}
           className="flex-1 flex-col sm:flex-row flex gap-10 p-5"
         >
           <div className="min-w-[100px] w-[100px] h-[100px] relative rounded-md overflow-hidden">

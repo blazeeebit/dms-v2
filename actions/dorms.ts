@@ -204,45 +204,43 @@ export const onGetDormProfile = async (id: string, ownerId: string) => {
     })
 
     if (userLanguagePreference) {
-      const dormProfile = await client.owner.findUnique({
+      const dormProfile = await client.dormitories.findUnique({
         where: {
-          userId: ownerId,
+          id,
         },
-        include: {
-          dorms: {
+        select: {
+          id: true,
+          language: {
             where: {
-              id,
+              language: userLanguagePreference.language,
             },
+          },
+          service: true,
+          location: true,
+          featuredImage: true,
+          Owner: {
+            select: {
+              stripeId: true,
+            },
+          },
+          rooms: {
             select: {
               id: true,
-              language: {
-                where: {
-                  language: userLanguagePreference.language,
-                },
-              },
-              service: true,
-              location: true,
-              featuredImage: true,
-              rooms: {
-                select: {
-                  id: true,
-                  price: true,
-                  type: true,
-                },
-              },
-              bookingPlan: {
-                select: {
-                  id: true,
-                  price: true,
-                  period: true,
-                },
-              },
-              gallery: {
-                select: {
-                  id: true,
-                  image: true,
-                },
-              },
+              price: true,
+              type: true,
+            },
+          },
+          bookingPlan: {
+            select: {
+              id: true,
+              price: true,
+              period: true,
+            },
+          },
+          gallery: {
+            select: {
+              id: true,
+              image: true,
             },
           },
         },
@@ -565,6 +563,125 @@ export const onCreateDormBookingButton = async (
     if (button) {
       return { status: 200, message: 'Booking button added' }
     }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onCreateBooking = async (
+  id: string,
+  studentId: string,
+  type: string
+) => {
+  try {
+    const room = await client.dormitories.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        rooms: {
+          where: {
+            type,
+          },
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (room) {
+      const booking = await client.room.update({
+        where: {
+          id: room.rooms[0].id,
+        },
+        data: {
+          reservations: {
+            create: {
+              students: studentId,
+            },
+          },
+        },
+      })
+
+      if (booking) {
+        return { status: 200, message: 'Payment complete! Booking created' }
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onCheckIfBooked = async (studentId: string, dormId: string) => {
+  try {
+    const booked = await client.dormitories.findUnique({
+      where: {
+        id: dormId,
+      },
+      select: {
+        rooms: {
+          where: {
+            dormitoriesId: dormId,
+            reservations: {
+              some: {
+                students: studentId,
+              },
+            },
+          },
+          select: {
+            reservations: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    if (booked?.rooms[0].reservations.length! > 0) {
+      return true
+    }
+    return false
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onCheckIfStudentRented = async (
+  studentId: string,
+  dormId: string
+) => {
+  try {
+    const rented = await client.dormitories.findUnique({
+      where: {
+        id: dormId,
+      },
+      select: {
+        rooms: {
+          where: {
+            rented: {
+              some: {
+                student: studentId,
+              },
+            },
+          },
+          select: {
+            rented: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    if (rented && rented.rooms[0].rented.length > 0) {
+      return true
+    }
+    return false
   } catch (error) {
     console.log(error)
   }

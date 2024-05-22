@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 const EditDormitory = async ({
@@ -21,26 +22,24 @@ const EditDormitory = async ({
 }) => {
   const dormProfile = await onGetDormProfile(params.dormid, params.id)
 
+  if (!dormProfile) redirect('/dashboard')
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-10 lg:gap-16 lg:gap-y-0">
       <div className="col-span-1 relative">
         <Card className="rounded-2xl sticky top-10">
           <CardContent className="py-5 flex flex-col gap-5">
             <div className="w-full aspect-square relative rounded-xl overflow-hidden">
-              <Image
-                src={dormProfile?.dorms[0].featuredImage!}
-                alt="featured"
-                fill
-              />
+              <Image src={dormProfile.featuredImage!} alt="featured" fill />
             </div>
             <EditCreateGallery
               id={params.dormid}
-              gallery={dormProfile?.dorms[0].gallery!}
+              gallery={dormProfile.gallery!}
             />
             <div className="flex flex-col gap-3 mt-5">
               <Label>Services</Label>
               <div className="flex flex-wrap gap-3 ">
-                {dormProfile?.dorms[0].service.map((service) => (
+                {dormProfile.service.map((service) => (
                   <ServiceChip
                     key={service.id}
                     name={service.name}
@@ -51,7 +50,7 @@ const EditDormitory = async ({
             </div>
             <ReservationButton
               id={params.dormid}
-              bookings={dormProfile?.dorms[0].bookingPlan[0]}
+              bookings={dormProfile.bookingPlan[0]}
             />
           </CardContent>
         </Card>
@@ -62,24 +61,24 @@ const EditDormitory = async ({
             <EditContent
               id={params.dormid}
               name="name"
-              title={dormProfile?.dorms[0].language[0].name}
+              title={dormProfile.language[0].name}
             >
               <CardTitle className="text-6xl font-bold">
-                {dormProfile?.dorms[0].language[0].name}
+                {dormProfile.language[0].name}
               </CardTitle>
             </EditContent>
             <EditContent
               id={params.dormid}
               name="description"
-              description={dormProfile?.dorms[0].language[0].description}
+              description={dormProfile.language[0].description}
             >
               <CardDescription className="text-lg leading-none">
-                {dormProfile?.dorms[0].language[0].description}
+                {dormProfile.language[0].description}
               </CardDescription>
             </EditContent>
             <PaymentPlansSection
               id={params.dormid}
-              rooms={dormProfile?.dorms[0].rooms!}
+              rooms={dormProfile.rooms!}
             />
           </div>
         </div>
