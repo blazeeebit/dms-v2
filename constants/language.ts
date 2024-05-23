@@ -32,6 +32,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
         settings: 'settings',
         community: 'community',
         compare: 'compare',
+        calender: 'calender',
       },
     },
     TURKISH: {
@@ -42,6 +43,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
         settings: 'ayarlar',
         community: 'toplum',
         compare: 'karşılaştırmak',
+        calender: 'takvim',
       },
     },
   },

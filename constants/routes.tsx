@@ -7,6 +7,7 @@ import {
   Settings,
   Users,
   CircleDollarSign,
+  Calendar,
 } from 'lucide-react'
 
 type MediaUrlProps = {
@@ -97,5 +98,11 @@ export const ACCOUNT_PAGES_MENU_STUDENT: AccountPagesMenuProps[] = [
     page: 'settings',
     path: `${PATH_URLS.DASHBOARD_STUDENT}/`,
     icon: <Settings size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'calender',
+    path: `${PATH_URLS.DASHBOARD_STUDENT}/`,
+    icon: <Calendar size={25} />,
   },
 ]
