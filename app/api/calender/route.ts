@@ -1,13 +1,12 @@
-'use server'
 import playwright from 'playwright'
 import * as cheerio from 'cheerio'
+import { NextResponse } from 'next/server'
 
 let obj: any = {}
 let arr: any = []
 
-export const onScrapeEmuCalender = async () => {
+export async function GET() {
   try {
-    console.log('getting data')
     const browser = await playwright.chromium.launch({ headless: true })
 
     const page = await browser.newPage()
@@ -24,7 +23,7 @@ export const onScrapeEmuCalender = async () => {
 
     await browser.close()
 
-    return arr[0].table.split('\n')
+    return NextResponse.json(arr[0].table.split('\n'))
   } catch (error) {
     console.log(error)
   }
