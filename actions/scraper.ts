@@ -7,6 +7,7 @@ let arr: any = []
 
 export const onScrapeEmuCalender = async () => {
   try {
+    console.log('getting data')
     const browser = await playwright.chromium.launch({ headless: true })
 
     const page = await browser.newPage()
