@@ -25,6 +25,6 @@ export async function GET() {
 
     return NextResponse.json(arr[0].table.split('\n'))
   } catch (error) {
-    console.log(error)
+    return new NextResponse('An error occurred when getting calender')
   }
 }
