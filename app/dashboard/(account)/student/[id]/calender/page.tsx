@@ -1,51 +1,34 @@
-'use client'
-import { Loader } from '@/components/loader'
-import { Card, CardDescription, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { onGetCalenders } from '@/actions/scrapper'
+import { Card, CardDescription } from '@/components/ui/card'
+import { PATH_URLS } from '@/constants/routes'
+import Link from 'next/link'
+import React from 'react'
 
-const EmuCalender = () => {
-  const [calender, setCalender] = useState<any[] | undefined>(undefined)
-  const [loading, setLoading] = useState<boolean>(false)
-
-  const onGetCalender = async () => {
-    try {
-      setLoading(true)
-      const cal = await axios.get('/api/calender')
-      if (cal) {
-        setCalender(cal.data)
-        setLoading(false)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    onGetCalender()
-  }, [])
-
+const StudentCalender = async ({ params }: { params: { id: string } }) => {
+  const calenders = await onGetCalenders()
   return (
-    <Card className="flex flex-col flex-1 h-0 overflow-auto no-scroll-window p-10 mb-5">
-      <CardTitle className="text-3xl">EMU Accademic Calender</CardTitle>
-      <Loader loading={loading}>
-        {calender ? (
-          calender.map((cal, key) => (
-            <div
-              key={key}
-              className="flex flex-col hover:bg-muted rounded-lg cursor-pointer"
+    <div className="flex-1 flex gap-5 h-0 mb-10 overflow-auto">
+      <div className="flex flex-col gap-2">
+        {calenders ? (
+          calenders?.map((calendar) => (
+            <Link
+              href={`${PATH_URLS.DASHBOARD_STUDENT}/${params.id}/calender/${calendar.id}`}
+              key={calendar.id}
             >
-              <CardDescription className="text-xl p-5">{cal}</CardDescription>
-              <Separator orientation="horizontal" />
-            </div>
+              <Card className="p-5 hover:bg-muted">
+                <CardDescription>{calendar.year}</CardDescription>
+              </Card>
+            </Link>
           ))
         ) : (
-          <div>No calender</div>
+          <CardDescription>No calenders have been integrated</CardDescription>
         )}
-      </Loader>
-    </Card>
+      </div>
+      <div className="flex-1 h-full flex justify-center items-center">
+        <CardDescription>You need to pick a calender</CardDescription>
+      </div>
+    </div>
   )
 }
 
-export default EmuCalender
+export default StudentCalender

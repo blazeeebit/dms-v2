@@ -30,3 +30,9 @@ export const decryptionHandler = (cipher: string) => {
   let decrypted = decipher.update(cipher, 'hex', 'utf8')
   return (decrypted += decipher.final('utf8'))
 }
+
+export const validateUniversityURL = (url: string) => {
+  return url.match(
+    /https?:\/\/(.+?\.)?emu\.edu.tr(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/
+  )
+}

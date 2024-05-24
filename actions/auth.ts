@@ -21,6 +21,9 @@ export const onBoardOauthUser = async () => {
 
     if (!role) redirect(`/onboarding/${user.id}`)
 
+    if (role?.role == 'ADMIN')
+      redirect(`${PATH_URLS.DASHBOARD_ADMIN}/${role.id}/overview`)
+
     if (role.role == 'OWNER')
       redirect(`${PATH_URLS.DASHBOARD_OWNER}/${role.id}/overview`)
 

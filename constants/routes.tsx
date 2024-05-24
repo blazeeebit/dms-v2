@@ -106,3 +106,18 @@ export const ACCOUNT_PAGES_MENU_STUDENT: AccountPagesMenuProps[] = [
     icon: <Calendar size={25} />,
   },
 ]
+
+export const ACCOUNT_PAGES_MENU_ADMIN: AccountPagesMenuProps[] = [
+  {
+    id: uuidv4(),
+    page: 'overview',
+    path: `${PATH_URLS.DASHBOARD_ADMIN}/`,
+    icon: <Building size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'calender',
+    path: `${PATH_URLS.DASHBOARD_ADMIN}/`,
+    icon: <Calendar size={25} />,
+  },
+]

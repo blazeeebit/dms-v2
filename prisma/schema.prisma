@@ -177,6 +177,12 @@ model Rating {
   studentId String   @db.Uuid
 }
 
+model Calender {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  calender String
+  year     String
+}
+
 enum Role {
   ADMIN
   OWNER
