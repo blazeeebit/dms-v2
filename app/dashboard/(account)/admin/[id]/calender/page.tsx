@@ -34,7 +34,7 @@ const AdminCalender = async ({ params }: { params: { id: string } }) => {
           <EmuCalenderForm />
         </Modal>
         <div className="flex flex-col gap-2">
-          {calenders ? (
+          {calenders?.length ? (
             calenders?.map((calendar) => (
               <Link
                 href={`${PATH_URLS.DASHBOARD_ADMIN}/${params.id}/calender/${calendar.id}`}
@@ -46,7 +46,9 @@ const AdminCalender = async ({ params }: { params: { id: string } }) => {
               </Link>
             ))
           ) : (
-            <CardDescription>No calenders have been integrated</CardDescription>
+            <CardDescription className="mt-5">
+              No calenders have been integrated
+            </CardDescription>
           )}
         </div>
       </div>

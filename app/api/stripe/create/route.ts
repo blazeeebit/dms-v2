@@ -60,8 +60,8 @@ export async function GET(req: NextRequest) {
       if (integrateStripeAccount) {
         const accountLink = await stripe.accountLinks.create({
           account: account.id,
-          refresh_url: 'http://localhost:3000/callback/stripe/refresh',
-          return_url: `http://localhost:3000/dashboard/owner/${id}/integrations`,
+          refresh_url: `${process.env.NEXT_PUBLIC_DMS_URL}/callback/stripe/refresh`,
+          return_url: `${process.env.NEXT_PUBLIC_DMS_URL}/dashboard/owner/${id}/integrations`,
           type: 'account_onboarding',
         })
         return NextResponse.json({

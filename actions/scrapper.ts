@@ -1,31 +1,6 @@
 'use server'
 
 import { client } from '@/lib/prisma'
-import axios from 'axios'
-import * as cheerio from 'cheerio'
-
-export const onIntegrateCalender = async (url: string, title: string) => {
-  try {
-    const calender = await axios.get(
-      `${process.env.SCRAPPING_ANT_HOST}${url}&x-api-key=${process.env.SCRAPPING_ANT_TOKEN}`
-    )
-    if (calender) {
-      const $ = cheerio.load(calender.data)
-      const integrated = await client.calender.create({
-        data: {
-          calender: JSON.stringify($('tr').text()),
-          year: title,
-        },
-      })
-
-      if (integrated) {
-        return { status: 200, message: 'Calender successfully integrated' }
-      }
-    }
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 export const onGetCalenders = async () => {
   try {
