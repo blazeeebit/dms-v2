@@ -9,6 +9,7 @@ import Link from 'next/link'
 import React from 'react'
 import { StatusSwitch } from './status-switch'
 import { PATH_URLS } from '@/constants/routes'
+import { DeleteDormListing } from './delete-listing'
 
 type ListingCardProps = {
   id: string
@@ -41,19 +42,20 @@ export const ListingCard = ({
           </div>
           <div className="flex flex-col gap-3 justify-center">
             <CardTitle>{title}</CardTitle>
-            <CardDescription className="w-8/12">
+            <CardDescription className="w-full lg:w-8/12">
               {description.length > 30
                 ? description.substring(0, 100) + '...'
                 : description}
             </CardDescription>
           </div>
         </Link>
-        <div className="p-5">
+        <div className="p-5 flex">
           <StatusSwitch
             payments={payments ? true : false}
             id={id}
             active={active}
           />
+          <DeleteDormListing id={id} />
         </div>
       </CardContent>
     </Card>

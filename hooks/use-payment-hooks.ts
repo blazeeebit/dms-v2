@@ -5,6 +5,7 @@ import {
 } from '@/actions/dorms'
 import {
   onCreateCustomerPaymentIntentSecret,
+  onCreateTransaction,
   onGetUserSubscription,
   onRoomRented,
 } from '@/actions/payment'
@@ -174,11 +175,7 @@ export const useStudentBooking = (
   const [loading, setLoading] = useState<boolean>(false)
   const stripe = useStripeHook()
   const elements = useElements()
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<CreateBookingButtonStudentProps>({
+  const { handleSubmit } = useForm<CreateBookingButtonStudentProps>({
     resolver: zodResolver(CreateBookingButtonStudentSchema),
     defaultValues: {
       room: '1+1',
@@ -213,19 +210,36 @@ export const useStudentBooking = (
         if (!room) {
           const booking = await onCreateBooking(id, studentId, values.room)
           if (booking) {
-            toast({
-              title: 'Success',
-              description: booking.message,
-            })
+            const transaction = await onCreateTransaction(
+              studentId,
+              id,
+              paymentIntent.amount.toString(),
+              'BOOKING'
+            )
+            if (transaction) {
+              toast({
+                title: 'Success',
+                description: booking.message,
+              })
+            }
           }
         }
         if (room && roomId) {
           const rented = await onRoomRented(roomId, studentId)
           if (rented) {
-            toast({
-              title: 'Success',
-              description: rented.message,
-            })
+            const transaction = await onCreateTransaction(
+              studentId,
+              id,
+              paymentIntent.amount.toString(),
+              'RENTED'
+            )
+
+            if (transaction) {
+              toast({
+                title: 'Success',
+                description: rented.message,
+              })
+            }
           }
         }
       }
@@ -237,7 +251,7 @@ export const useStudentBooking = (
     }
   })
 
-  return { register, errors, loading, onBookRoom }
+  return { loading, onBookRoom }
 }
 
 export const useStripeCustomer = (amount: number, stripeId: string) => {

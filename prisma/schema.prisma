@@ -72,6 +72,8 @@ model Dormitories {
 
   active Boolean @default(false)
 
+  transaction Transactions[]
+
   bookingPlan BookingPlan[]
   rooms       Room[]
   review      Review[]
@@ -181,6 +183,22 @@ model Calender {
   id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   calender String
   year     String
+}
+
+model Transactions {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  amount        String
+  createdAt     DateTime        @default(now())
+  type          TransactionType
+  studentId     String          @db.Uuid
+  studentName   String
+  Dormitories   Dormitories?    @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
+  dormitoriesId String?         @db.Uuid
+}
+
+enum TransactionType {
+  BOOKING
+  RENTED
 }
 
 enum Role {

@@ -99,11 +99,63 @@ export const onRoomRented = async (room: string, student: string) => {
     })
 
     if (rented) {
-      return { status: 200, message: 'You have confirmed your room' }
+      const deleteReservation = await client.reservations.deleteMany({
+        where: {
+          students: student,
+        },
+      })
+
+      if (deleteReservation) {
+        return { status: 200, message: 'You have confirmed your room' }
+      }
     }
   } catch (error) {
     console.log(error)
   }
 }
 
-export const onPaymentHistory = async () => {}
+export const onCreateTransaction = async (
+  studentId: string,
+  dormId: string,
+  amount: string,
+  type: 'BOOKING' | 'RENTED'
+) => {
+  try {
+    const studentInfo = await client.student.findUnique({
+      where: {
+        userId: studentId,
+      },
+      select: {
+        User: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    })
+
+    if (studentInfo && studentInfo.User) {
+      const transactionComplete = await client.dormitories.update({
+        where: {
+          id: dormId,
+        },
+        data: {
+          transaction: {
+            create: {
+              amount,
+              type,
+              studentId,
+              studentName: studentInfo.User.name,
+            },
+          },
+        },
+      })
+
+      if (transactionComplete) {
+        return { status: 200, message: 'Payment completed' }
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

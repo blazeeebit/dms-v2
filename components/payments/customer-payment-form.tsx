@@ -3,9 +3,7 @@ import { Loader } from '@/components/loader'
 import { Button } from '@/components/ui/button'
 import { PaymentElement } from '@stripe/react-stripe-js'
 import React from 'react'
-import { FormGenerator } from '../forms/generator'
 import { useStudentBooking } from '@/hooks/use-payment-hooks'
-import { CREATE_DORM_ROOM_PAYMENT_PLAN } from '@/constants/form'
 import { Label } from '../ui/label'
 import { CardTitle } from '../ui/card'
 
@@ -24,12 +22,7 @@ export const CustomerPaymentForm = ({
   room,
   roomId,
 }: CustomerPaymentFormProps) => {
-  const { register, errors, loading, onBookRoom } = useStudentBooking(
-    id,
-    studentId,
-    room,
-    roomId
-  )
+  const { loading, onBookRoom } = useStudentBooking(id, studentId, room, roomId)
   return (
     <form className="flex flex-col gap-5 mt-5" onSubmit={onBookRoom}>
       <Label>

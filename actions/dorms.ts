@@ -1,7 +1,9 @@
 'use server'
 import { client } from '@/lib/prisma'
-import axios from 'axios'
+import axios, { all } from 'axios'
 import { revalidatePath } from 'next/cache'
+import { onCreateTransaction } from './payment'
+import { getMonthName } from '@/lib/utils'
 
 export const onCreateNewListing = async (
   id: string,
@@ -822,6 +824,201 @@ export const onGetTotalRating = async (dormId: string) => {
       }, 0)
 
       return totalRating / rating.length
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onDeleteDorm = async (dormId: string) => {
+  try {
+    const deleteDorm = await client.dormitories.delete({
+      where: {
+        id: dormId,
+      },
+    })
+
+    if (deleteDorm) {
+      return {
+        status: 200,
+        message: 'Dorm has been deleted',
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onTotalDormsOwned = async (userId: string) => {
+  try {
+    const owned = await client.dormitories.count({
+      where: {
+        Owner: {
+          userId,
+        },
+      },
+    })
+
+    if (owned) {
+      return owned
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onTotalDormBookings = async (userId: string) => {
+  try {
+    const bookings = await client.reservations.count({
+      where: {
+        Room: {
+          Dormitories: {
+            Owner: {
+              userId,
+            },
+          },
+        },
+      },
+    })
+
+    if (bookings) {
+      return bookings
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onTotalDormsRevenue = async (userId: string) => {
+  try {
+    const revenue = await client.transactions.findMany({
+      where: {
+        Dormitories: {
+          Owner: {
+            userId,
+          },
+        },
+      },
+      select: {
+        amount: true,
+      },
+    })
+
+    if (revenue) {
+      const total = revenue.reduce((total, next) => {
+        return total + parseInt(next.amount)
+      }, 0)
+      return total
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onTotalDormsRented = async (userId: string) => {
+  try {
+    const rented = await client.rented.count({
+      where: {
+        Room: {
+          Dormitories: {
+            Owner: {
+              userId,
+            },
+          },
+        },
+      },
+    })
+
+    if (rented) {
+      return rented
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onCreateStudentRentData = async (userId: string) => {
+  try {
+    const allRents = await client.rented.findMany({
+      where: {
+        Room: {
+          Dormitories: {
+            Owner: {
+              userId,
+            },
+          },
+        },
+      },
+      select: {
+        createdAt: true,
+      },
+    })
+
+    if (allRents) {
+      //create a data set
+      const dataSet: { month: string; count: number }[] = [
+        {
+          month: 'Jan',
+          count: 0,
+        },
+        {
+          month: 'Feb',
+          count: 0,
+        },
+        {
+          month: 'Mar',
+          count: 0,
+        },
+        {
+          month: 'Apr',
+          count: 0,
+        },
+        {
+          month: 'May',
+          count: 0,
+        },
+        {
+          month: 'Jun',
+          count: 0,
+        },
+        {
+          month: 'Jul',
+          count: 0,
+        },
+        {
+          month: 'Aug',
+          count: 0,
+        },
+        {
+          month: 'Sep',
+          count: 0,
+        },
+        {
+          month: 'Oct',
+          count: 0,
+        },
+        {
+          month: 'Nov',
+          count: 0,
+        },
+        {
+          month: 'Dec',
+          count: 0,
+        },
+      ]
+
+      for (let month = 0; month < dataSet.length; month++) {
+        for (let renter = 0; renter < allRents.length; renter++) {
+          if (
+            getMonthName(allRents[renter].createdAt.getMonth() + 1) ==
+            dataSet[month].month
+          ) {
+            dataSet[month].count += 1
+          }
+        }
+      }
+
+      return dataSet
     }
   } catch (error) {
     console.log(error)

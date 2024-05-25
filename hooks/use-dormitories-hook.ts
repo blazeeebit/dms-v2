@@ -1,6 +1,7 @@
 import {
   onActiveateDorm,
   onCreateNewListing,
+  onDeleteDorm,
   onGetSingleCompareDorm,
   onPostNewReview,
   onRateDormService,
@@ -380,4 +381,29 @@ export const useReview = (dormId: string, studentId: string) => {
   })
 
   return { loading, onPostReview, register, errors }
+}
+
+export const useDeleteDorm = (dormId: string) => {
+  const [loading, setloading] = useState<boolean>(false)
+  const router = useRouter()
+
+  const { toast } = useToast()
+  const onDelete = async () => {
+    try {
+      setloading(true)
+      const deleted = await onDeleteDorm(dormId)
+      if (deleted) {
+        toast({
+          title: 'Success',
+          description: deleted.message,
+        })
+      }
+      setloading(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return { loading, onDelete }
 }
