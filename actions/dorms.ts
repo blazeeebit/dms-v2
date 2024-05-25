@@ -1024,3 +1024,130 @@ export const onCreateStudentRentData = async (userId: string) => {
     console.log(error)
   }
 }
+
+export const onCreateRevenueDataSet = async (userId: string) => {
+  try {
+    const transactions = await client.transactions.findMany({
+      where: {
+        Dormitories: {
+          Owner: {
+            userId,
+          },
+        },
+      },
+      select: {
+        createdAt: true,
+        amount: true,
+      },
+    })
+
+    if (transactions) {
+      const dataSet: { month: string; count: number }[] = [
+        {
+          month: 'Jan',
+          count: 0,
+        },
+        {
+          month: 'Feb',
+          count: 0,
+        },
+        {
+          month: 'Mar',
+          count: 0,
+        },
+        {
+          month: 'Apr',
+          count: 0,
+        },
+        {
+          month: 'May',
+          count: 0,
+        },
+        {
+          month: 'Jun',
+          count: 0,
+        },
+        {
+          month: 'Jul',
+          count: 0,
+        },
+        {
+          month: 'Aug',
+          count: 0,
+        },
+        {
+          month: 'Sep',
+          count: 0,
+        },
+        {
+          month: 'Oct',
+          count: 0,
+        },
+        {
+          month: 'Nov',
+          count: 0,
+        },
+        {
+          month: 'Dec',
+          count: 0,
+        },
+      ]
+
+      for (let month = 0; month < dataSet.length; month++) {
+        for (let renter = 0; renter < transactions.length; renter++) {
+          if (
+            getMonthName(transactions[renter].createdAt.getMonth() + 1) ==
+            dataSet[month].month
+          ) {
+            dataSet[month].count += parseInt(transactions[renter].amount) / 100
+          }
+        }
+      }
+
+      return dataSet
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetAllRecentTransactions = async (userId: string) => {
+  try {
+    const transaction = await client.transactions.findMany({
+      where: {
+        Dormitories: {
+          Owner: {
+            userId,
+          },
+        },
+      },
+      select: {
+        Dormitories: {
+          select: {
+            language: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        createdAt: true,
+        amount: true,
+        studentName: true,
+        studentId: true,
+        type: true,
+        id: true,
+      },
+      take: 5,
+      orderBy: {
+        createdAt: 'asc',
+      },
+    })
+
+    if (transaction) {
+      return transaction
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

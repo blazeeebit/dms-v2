@@ -7,9 +7,10 @@ type UserBarChartProps = {
     month: string
     count: number
   }[]
+  cash?: boolean
 }
 
-export const UserBarChart = ({ data }: UserBarChartProps) => {
+export const UserBarChart = ({ data, cash }: UserBarChartProps) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data}>
@@ -25,7 +26,7 @@ export const UserBarChart = ({ data }: UserBarChartProps) => {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value}`}
+          tickFormatter={(value) => `${cash ? '$' : ''}${value}`}
         />
         <Bar
           dataKey="count"
