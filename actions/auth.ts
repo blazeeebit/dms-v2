@@ -111,7 +111,7 @@ export const onCompleteEmailPasswordSignUp = async (
       const registered = await client.user.create({
         data: {
           clerkId: clerkid,
-          username,
+          username: username || '',
           name,
           role,
           owner: {
@@ -135,7 +135,7 @@ export const onCompleteEmailPasswordSignUp = async (
       const registered = await client.user.create({
         data: {
           clerkId: clerkid,
-          username,
+          username: username || '',
           name,
           role,
           student: {
