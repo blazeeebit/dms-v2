@@ -8,6 +8,7 @@ import {
   Users,
   CircleDollarSign,
   Calendar,
+  LayoutDashboardIcon,
 } from 'lucide-react'
 
 type MediaUrlProps = {
@@ -111,6 +112,18 @@ export const ACCOUNT_PAGES_MENU_ADMIN: AccountPagesMenuProps[] = [
   {
     id: uuidv4(),
     page: 'overview',
+    path: `${PATH_URLS.DASHBOARD_ADMIN}/`,
+    icon: <LayoutDashboardIcon size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'users',
+    path: `${PATH_URLS.DASHBOARD_ADMIN}/`,
+    icon: <Users size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'dormitories',
     path: `${PATH_URLS.DASHBOARD_ADMIN}/`,
     icon: <Building size={25} />,
   },
