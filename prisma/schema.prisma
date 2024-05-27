@@ -27,6 +27,7 @@ model User {
   verified  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  banned    Boolean  @default(false)
 
   owner   Owner[]
   student Student[]

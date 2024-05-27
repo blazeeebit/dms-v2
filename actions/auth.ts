@@ -166,6 +166,7 @@ export const onGetUserInfo = async (id: string) => {
         language: true,
         username: true,
         role: true,
+        image: true,
         student: {
           select: {
             id: true,

@@ -33,6 +33,7 @@ const DashboardLayout = async ({
           username: loggedInUser?.username!,
           language: loggedInUser?.language!,
           role: loggedInUser?.role!,
+          image: loggedInUser?.image!,
         }}
       />
       {children}

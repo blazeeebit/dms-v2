@@ -10,15 +10,21 @@ import {
 } from '@/constants/routes'
 import React from 'react'
 
-const DormPageLayout = async ({
+const ProfilePageLayout = async ({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { userid: string }
+  params: { id: string }
 }) => {
-  const loggedInUser = await onGetUserInfo(params.userid)
-  const student = await onGetStudentDetails(params.userid)
+  const loggedInUser = await onGetUserInfo(params.id)
+
+  let student
+
+  if (loggedInUser?.role === 'STUDENT') {
+    student = await onGetStudentDetails(params.id)
+  }
+
   return (
     <div className="container">
       <SideBar
@@ -30,10 +36,10 @@ const DormPageLayout = async ({
             ? ACCOUNT_PAGES_MENU_OWNER
             : ACCOUNT_PAGES_MENU_ADMIN
         }
-        id={params.userid}
+        id={params.id}
       />
       <DashboardNavBar
-        id={params.userid}
+        id={params.id}
         user={{
           username: loggedInUser?.username!,
           language: loggedInUser?.language!,
@@ -48,4 +54,4 @@ const DormPageLayout = async ({
   )
 }
 
-export default DormPageLayout
+export default ProfilePageLayout

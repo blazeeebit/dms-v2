@@ -7,8 +7,8 @@ import { MobileDrawer } from '../mobile-drawer/mobile-drawer'
 import { useProfile } from '@/hooks/use-profile-hook'
 import { OwnerCredits } from '../subscriptions/credits'
 import Link from 'next/link'
-import { LanguageToggle } from '../language-toggle'
 import { CardDescription } from '../ui/card'
+import { UserWidget } from '../user-widget'
 
 type DashboardNavBarProps = {
   id: string
@@ -16,6 +16,7 @@ type DashboardNavBarProps = {
     username: string
     language: 'ENGLISH' | 'TURKISH'
     role: 'OWNER' | 'STUDENT' | 'ADMIN'
+    image?: string
   }
   menu?: boolean
 }
@@ -45,6 +46,9 @@ export const DashboardNavBar = ({ user, id, menu }: DashboardNavBarProps) => {
         {user.role == 'OWNER' && <OwnerCredits id={id} />}
         <SignOutButton logout={onLogout} />
         <ThemeToggle language={user.language} />
+        <span className="ml-3">
+          <UserWidget image={user.image} />
+        </span>
       </div>
     </div>
   )

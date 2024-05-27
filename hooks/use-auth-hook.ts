@@ -247,7 +247,6 @@ export const useOnBoarding = () => {
             title: onBoarded.status == 200 ? 'Success' : 'Error',
             description: onBoarded.message,
           })
-          console.log('On boarding success')
           setLoading(false)
           if (onBoarded.role == 'OWNER') {
             console.log('On boarding success Owner')
@@ -258,8 +257,10 @@ export const useOnBoarding = () => {
             router.push(`/dashboard/student/${onBoarded.id}/overview`)
           }
         }
-      } catch (error) {
-        console.log(error)
+      } catch (error: any) {
+        if (error.message == 'NEXT_REDIRECT') {
+          throw error
+        }
       }
     }
   )
