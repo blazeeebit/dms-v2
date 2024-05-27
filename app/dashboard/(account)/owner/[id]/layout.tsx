@@ -17,7 +17,7 @@ const DashboardLayout = async ({
   if (loggedInUser?.role !== 'OWNER') redirect('/dashboard')
 
   return (
-    <div className="container h-screen 2xl:p-0 lg:pl-28">
+    <div className="container h-screen 2xl:p-0 lg:pl-28 flex flex-col">
       <SideBar
         language={loggedInUser?.language!}
         menu={ACCOUNT_PAGES_MENU_OWNER}

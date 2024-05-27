@@ -213,11 +213,15 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
     ENGLISH: {
       content: {
         title: 'Create Custom Email Templates',
+        button: 'New Template',
+        template: 'Template',
       },
     },
     TURKISH: {
       content: {
         title: 'Özel E-posta Şablonları Oluşturun',
+        button: 'Yeni şablon',
+        template: 'Şablon',
       },
     },
   },

@@ -42,6 +42,8 @@ model Owner {
   subscription Subscription?
 
   dorms Dormitories[]
+
+  emailTemplate EmailTempplate[]
 }
 
 model Student {
@@ -81,8 +83,6 @@ model Dormitories {
 
   language DormitoriesLanguage[]
   service  Service[]
-
-  emailTemplate EmailTempplate[]
 }
 
 model DormitoriesLanguage {
@@ -200,13 +200,15 @@ model Transactions {
 }
 
 model EmailTempplate {
-  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String?
-  english       String?
-  turkish       String?
-  createdAt     DateTime    @default(now())
-  Dormitories   Dormitories @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
-  dormitoriesId String      @db.Uuid
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enName    String?
+  trName    String?
+  english   String?
+  turkish   String?
+  createdAt DateTime @default(now())
+  Owner     Owner?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String?  @db.Uuid
+  dormId    String?  @db.Uuid
 }
 
 enum TransactionType {
