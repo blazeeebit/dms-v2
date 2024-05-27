@@ -9,6 +9,7 @@ import {
   CircleDollarSign,
   Calendar,
   LayoutDashboardIcon,
+  Mail,
 } from 'lucide-react'
 
 type MediaUrlProps = {
@@ -72,6 +73,12 @@ export const ACCOUNT_PAGES_MENU_OWNER: AccountPagesMenuProps[] = [
     page: 'community',
     path: `${PATH_URLS.DASHBOARD_OWNER}/`,
     icon: <Users size={25} />,
+  },
+  {
+    id: uuidv4(),
+    page: 'email-marketing',
+    path: `${PATH_URLS.DASHBOARD_OWNER}/`,
+    icon: <Mail size={25} />,
   },
 ]
 

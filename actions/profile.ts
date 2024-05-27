@@ -21,3 +21,22 @@ export const onGetUserProfile = async (id: string) => {
     console.log(error)
   }
 }
+
+export const onGetUserLanguagePreference = async (id: string) => {
+  try {
+    const language = await client.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        language: true,
+      },
+    })
+
+    if (language) {
+      return language.language
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

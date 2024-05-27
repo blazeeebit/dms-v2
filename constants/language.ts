@@ -13,6 +13,8 @@ type LANGUAGE_CONTENT = {
   MAKE_BOOKING: LANGUAGE_PREFERENCE_PROPS
   ROOM_PAYMENT: LANGUAGE_PREFERENCE_PROPS
   RATING: LANGUAGE_PREFERENCE_PROPS
+  OWNER_OVERVIEW: LANGUAGE_PREFERENCE_PROPS
+  EMAIL_TEMPLATE: LANGUAGE_PREFERENCE_PROPS
 }
 export const DMS_CONTENT: LANGUAGE_CONTENT = {
   SEARCH: {
@@ -34,6 +36,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
         compare: 'compare',
         calender: 'calender',
         users: 'users',
+        'email-marketing': 'Email marketing',
       },
     },
     TURKISH: {
@@ -46,6 +49,7 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
         compare: 'karşılaştırmak',
         calender: 'takvim',
         users: 'kullanıcılar',
+        'email-marketing': 'eposta pazarlama',
       },
     },
   },
@@ -176,6 +180,44 @@ export const DMS_CONTENT: LANGUAGE_CONTENT = {
       content: {
         title: 'Hizmetlerimizi Değerlendirin',
         description: 'Hey! Bir dakikanız varsa bize hızlı bir puan verin',
+      },
+    },
+  },
+  OWNER_OVERVIEW: {
+    ENGLISH: {
+      content: {
+        students: 'Total Students',
+        dorms: 'Total Dorms',
+        transactions: 'Recent Transactions',
+        studentTable: 'Students',
+        revenueTable: 'Revenue',
+        payments: 'Total Payments',
+        reservations: 'Total Reservations',
+        recent: 'Heres a list of your most recent payments',
+      },
+    },
+    TURKISH: {
+      content: {
+        students: 'Toplam Öğrenci',
+        dorms: 'Toplam Yurt Sayısı',
+        transactions: 'Son İşlemler',
+        studentTable: 'Öğrenciler',
+        revenueTable: 'Hasılat',
+        payments: 'Toplam tutar',
+        reservations: 'Toplam Rezervasyon',
+        recent: 'İşte en son ödemelerinizin listesi',
+      },
+    },
+  },
+  EMAIL_TEMPLATE: {
+    ENGLISH: {
+      content: {
+        title: 'Create Custom Email Templates',
+      },
+    },
+    TURKISH: {
+      content: {
+        title: 'Özel E-posta Şablonları Oluşturun',
       },
     },
   },
