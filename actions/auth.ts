@@ -8,6 +8,8 @@ import { redirect } from 'next/navigation'
 export const onBoardOauthUser = async () => {
   const user = await currentUser()
 
+  if (!user) redirect('/sign-in')
+
   if (user) {
     const role = await client.user.findUnique({
       where: {

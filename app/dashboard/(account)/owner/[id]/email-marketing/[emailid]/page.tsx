@@ -25,7 +25,11 @@ const EmailTemplate = async ({
           english={template.enName!}
           turkish={template.trName!}
         />
-        <EmailDorm />
+        <EmailDorm
+          dorms={dorms?.dorms!}
+          emailId={params.emailid}
+          dormId={template.dormId!}
+        />
       </div>
     </div>
   )

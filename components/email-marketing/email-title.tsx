@@ -4,7 +4,6 @@ import { CardTitle } from '../ui/card'
 import { DMS_CONTENT } from '@/constants/language'
 import { Edit, X } from 'lucide-react'
 import { useEmailName } from '@/hooks/use-email-hook'
-import { FormGenerator } from '../forms/generator'
 import { Loader } from '../loader'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
@@ -68,7 +67,7 @@ export const EmailName = ({
               ? english
               : language === 'TURKISH' && turkish}
           </CardTitle>
-          <Edit className="group-hover:flex hidden" />
+          <Edit className="group-hover:flex hidden text-gray-500" />
         </div>
       )}
     </div>

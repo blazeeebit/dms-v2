@@ -78,3 +78,16 @@ export const useEmailName = (id: string) => {
     onEditTemplateName,
   }
 }
+
+export const useEmailDorm = (emailId: string) => {
+  const [loading, setloading] = useState<boolean>(false)
+  const [editing, setEditing] = useState<boolean>(false)
+
+  const onEditing = () => setEditing((prev) => !prev)
+
+  return {
+    onEditing,
+    loading,
+    editing,
+  }
+}

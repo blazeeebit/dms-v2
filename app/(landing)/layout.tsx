@@ -11,7 +11,7 @@ const LandingPageLayout = async ({
 
   if (user) redirect('/dashboard')
 
-  return <div className="container pt-5">{children}</div>
+  return <div className="container">{children}</div>
 }
 
 export default LandingPageLayout
