@@ -1,6 +1,8 @@
 'use server'
 import { client } from '@/lib/prisma'
 import Stripe from 'stripe'
+import { onMailer } from './mail'
+import { clerkClient } from '@clerk/nextjs/server'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET!, {
   typescript: true,
@@ -106,7 +108,24 @@ export const onRoomRented = async (room: string, student: string) => {
       })
 
       if (deleteReservation) {
-        return { status: 200, message: 'You have confirmed your room' }
+        const studentEmail = await client.user.findUnique({
+          where: {
+            id: student,
+          },
+          select: {
+            clerkId: true,
+          },
+        })
+
+        if (studentEmail) {
+          const email = await clerkClient.users.getUser(studentEmail.clerkId)
+          onMailer(
+            email.emailAddresses[0].emailAddress,
+            'Payment Confirmed',
+            'Your payment has been confirmed'
+          )
+          return { status: 200, message: 'You have confirmed your room' }
+        }
       }
     }
   } catch (error) {

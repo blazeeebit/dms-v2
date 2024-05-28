@@ -1,5 +1,6 @@
 import { onGetDormsNameAndIds, onGetEmailTemplate } from '@/actions/mail'
 import { onGetUserLanguagePreference } from '@/actions/profile'
+import { CreateEmail } from '@/components/email-marketing/create-email'
 import { EmailDorm } from '@/components/email-marketing/email-dorm'
 import { EmailName } from '@/components/email-marketing/email-title'
 import { redirect } from 'next/navigation'
@@ -29,6 +30,13 @@ const EmailTemplate = async ({
           dorms={dorms?.dorms!}
           emailId={params.emailid}
           dormId={template.dormId!}
+        />
+        <CreateEmail
+          enContent={template.english!}
+          trContent={template.turkish!}
+          emailId={params.emailid}
+          language={language!}
+          userId={params.id}
         />
       </div>
     </div>

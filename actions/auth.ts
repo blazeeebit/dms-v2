@@ -35,9 +35,8 @@ export const onBoardOauthUser = async () => {
 }
 
 export const completeOnBoarding = async (role: 'OWNER' | 'STUDENT') => {
-  const user = await currentUser()
-
   try {
+    const user = await currentUser()
     if (user) {
       if (role == 'OWNER') {
         const onBoarded = await client.user.create({

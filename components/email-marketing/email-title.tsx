@@ -60,7 +60,7 @@ export const EmailName = ({
           className="w-full flex justify-between items-center"
           onClick={onEditName}
         >
-          <CardTitle className="text-4xl">
+          <CardTitle className="text-4xl font-bold">
             {!english && !turkish
               ? `${DMS_CONTENT.EMAIL_TEMPLATE[language].content.template}`
               : language === 'ENGLISH'

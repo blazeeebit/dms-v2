@@ -74,3 +74,26 @@ export const onGenerateAiDormDescription = async (
     console.log(error)
   }
 }
+
+export const onGenerateEmailTemplate = async (prompt: string) => {
+  try {
+    const chatCompletion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: 'assistant',
+          content: prompt,
+        },
+      ],
+      model: 'gpt-3.5-turbo',
+    })
+
+    if (chatCompletion) {
+      return {
+        status: 200,
+        message: chatCompletion.choices[0].message.content,
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

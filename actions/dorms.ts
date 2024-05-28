@@ -4,6 +4,8 @@ import axios, { all } from 'axios'
 import { revalidatePath } from 'next/cache'
 import { onCreateTransaction } from './payment'
 import { getMonthName } from '@/lib/utils'
+import { onMailer } from './mail'
+import { clerkClient } from '@clerk/nextjs/server'
 
 export const onCreateNewListing = async (
   id: string,
@@ -614,7 +616,24 @@ export const onCreateBooking = async (
       })
 
       if (booking) {
-        return { status: 200, message: 'Payment complete! Booking created' }
+        const studentEmail = await client.user.findUnique({
+          where: {
+            id: studentId,
+          },
+          select: {
+            clerkId: true,
+          },
+        })
+
+        if (studentEmail) {
+          const email = await clerkClient.users.getUser(studentEmail.clerkId)
+          onMailer(
+            email.emailAddresses[0].emailAddress,
+            'Booking Confirmed',
+            'Your booking has been confirmed'
+          )
+          return { status: 200, message: 'Payment complete! Booking created' }
+        }
       }
     }
   } catch (error) {

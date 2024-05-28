@@ -4,6 +4,7 @@ import React from 'react'
 import { CardDescription } from '../ui/card'
 import { Button } from '../ui/button'
 import { Edit } from 'lucide-react'
+import { Loader } from '../loader'
 
 type EmailDormProps = {
   dorms: {
@@ -17,12 +18,21 @@ type EmailDormProps = {
 }
 
 export const EmailDorm = ({ dorms, emailId, dormId }: EmailDormProps) => {
-  const { loading, onEditing, editing } = useEmailDorm(emailId)
+  const { loading, onEditing, editing, register, onAssignDorm } =
+    useEmailDorm(emailId)
+
+  const dormName = dorms.find((dorm) => dorm.id === dormId)
   return (
     <div className="hover:bg-muted rounded-lg group cursor-pointer">
       {editing ? (
-        <div className="p-5 w-full flex justify-between">
-          <select className="bg-transparent text-sm border-2 px-5">
+        <form
+          onSubmit={onAssignDorm}
+          className="p-5 w-full flex justify-between"
+        >
+          <select
+            className="bg-transparent text-sm border-2 px-5"
+            {...register('dorm')}
+          >
             {dorms.map((dorm) =>
               dorm.language.map((lan) => (
                 <option key={dorm.id} value={dorm.id} className="bg-gray-500">
@@ -31,14 +41,19 @@ export const EmailDorm = ({ dorms, emailId, dormId }: EmailDormProps) => {
               ))
             )}
           </select>
-          <div>
-            <Button onClick={onEditing}>Cancel</Button>
+          <div className="flex gap-5">
+            <Button type="submit" variant="outline">
+              <Loader loading={loading}>Update</Loader>
+            </Button>
+            <Button type="button" onClick={onEditing}>
+              Cancel
+            </Button>
           </div>
-        </div>
+        </form>
       ) : (
         <div onClick={onEditing} className="p-5 w-full flex justify-between">
           <CardDescription className="text-base">
-            {dormId || 'No dorm assigned'}
+            {dormName?.language[0].name || 'No dorm assigned'}
           </CardDescription>
           <Edit className="group-hover:flex hidden text-gray-500" />
         </div>

@@ -1,6 +1,8 @@
 import { onGetAllEmailTemplates } from '@/actions/mail'
 import { onGetUserLanguagePreference } from '@/actions/profile'
+import { DropDown } from '@/components/dropdown'
 import { CreateTemplate } from '@/components/email-marketing/create-template'
+import { SendEmails } from '@/components/email-marketing/send-mail'
 import {
   Card,
   CardContent,
@@ -9,7 +11,7 @@ import {
 } from '@/components/ui/card'
 import { DMS_CONTENT } from '@/constants/language'
 import { PATH_URLS } from '@/constants/routes'
-import { Edit } from 'lucide-react'
+import { Ellipsis } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -30,13 +32,12 @@ const EmailMarketingPage = async ({ params }: { params: { id: string } }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {templates && templates.length > 0 ? (
           templates.map((template, index) => (
-            <Link
-              key={template.id}
-              href={`${PATH_URLS.DASHBOARD_OWNER}/${params.id}/email-marketing/${template.id}`}
-            >
-              <Card className="p-10 hover:bg-muted group">
-                <CardContent className="p-0 flex flex-col gap-3 relative">
-                  <Edit className="absolute right-0 hidden group-hover:flex top-0 text-gray-500" />
+            <Card key={template.id} className="p-10 hover:bg-muted">
+              <CardContent className="p-0 flex items-start">
+                <Link
+                  className="flex flex-col gap-3 flex-1"
+                  href={`${PATH_URLS.DASHBOARD_OWNER}/${params.id}/email-marketing/${template.id}`}
+                >
                   <CardTitle>
                     {!template.enName && !template.trName
                       ? `${
@@ -50,12 +51,19 @@ const EmailMarketingPage = async ({ params }: { params: { id: string } }) => {
                     {!template.english && !template.turkish
                       ? 'The template has no content'
                       : language === 'ENGLISH'
-                      ? `${template.english?.slice(0, 10)[0]}...`
-                      : `${template.turkish?.slice(0, 10)[0]}...`}
+                      ? `${template.english?.slice(0, 20)}...`
+                      : `${template.turkish?.slice(0, 20)}...`}
                   </CardDescription>
-                </CardContent>
-              </Card>
-            </Link>
+                </Link>
+                <DropDown
+                  label="Options"
+                  trigger={<Ellipsis />}
+                  className="text-gray-500 outline-none p-0"
+                >
+                  <SendEmails id={template.id} />
+                </DropDown>
+              </CardContent>
+            </Card>
           ))
         ) : (
           <div className="flex justify-center py-20 lg:col-span-3 xl:col-span-4 h-full">

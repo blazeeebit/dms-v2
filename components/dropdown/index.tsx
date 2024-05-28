@@ -11,12 +11,18 @@ type DropDownProps = {
   trigger: React.ReactNode
   children: React.ReactNode
   label: string
+  className?: string
 }
 
-export const DropDown = ({ trigger, children, label }: DropDownProps) => {
+export const DropDown = ({
+  trigger,
+  children,
+  label,
+  className,
+}: DropDownProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>{trigger}</DropdownMenuTrigger>
+      <DropdownMenuTrigger className={className}>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>{label}</DropdownMenuLabel>
         <DropdownMenuSeparator />
