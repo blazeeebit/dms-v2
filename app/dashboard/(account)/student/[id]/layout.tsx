@@ -18,6 +18,8 @@ const DashboardLayout = async ({
 
   if (loggedInUser?.role !== 'STUDENT') redirect('/dashboard')
 
+  if (loggedInUser.banned) redirect('/banned')
+
   const student = await onGetStudentDetails(params.id)
 
   return (

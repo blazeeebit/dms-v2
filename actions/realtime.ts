@@ -1,7 +1,6 @@
 'use server'
 
 import { client } from '@/lib/prisma'
-import { decryptionHandler, encryptionHandler } from '@/lib/utils'
 import { clerkClient } from '@clerk/nextjs/server'
 
 export const onStudentOnline = async (id: string) => {

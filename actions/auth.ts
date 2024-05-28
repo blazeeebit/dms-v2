@@ -168,6 +168,7 @@ export const onGetUserInfo = async (id: string) => {
         username: true,
         role: true,
         image: true,
+        banned: true,
         student: {
           select: {
             id: true,

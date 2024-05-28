@@ -16,6 +16,8 @@ const DashboardLayout = async ({
 
   if (loggedInUser?.role !== 'OWNER') redirect('/dashboard')
 
+  if (loggedInUser.banned) redirect('/banned')
+
   return (
     <div className="container h-screen 2xl:p-0 lg:pl-28 flex flex-col">
       <SideBar
