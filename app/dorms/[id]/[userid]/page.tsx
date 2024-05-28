@@ -74,6 +74,7 @@ const DormPage = async ({
                   stripeId={dorm.Owner?.stripeId!}
                   bookingPrice={dorm.bookingPlan[0].price}
                   language={user.language}
+                  promo={dorm.promo[0]}
                 />
               ))}
             {rating ? (
@@ -121,6 +122,7 @@ const DormPage = async ({
               studentId={params.userid}
               payment
               id={params.id}
+              promo={dorm.promo[0]}
               rooms={dorm.rooms!}
             />
           ))}

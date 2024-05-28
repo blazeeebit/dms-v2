@@ -15,6 +15,9 @@ type StripeElementsProps = {
   booking?: string
   room?: boolean
   roomId?: string
+  promo?: {
+    discount: number
+  }
 }
 
 export const StripeElements = ({
@@ -26,6 +29,7 @@ export const StripeElements = ({
   room,
   booking,
   roomId,
+  promo,
 }: StripeElementsProps) => {
   const StripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISH_KEY!,
@@ -34,8 +38,20 @@ export const StripeElements = ({
     }
   )
 
+  let discount = 0
+
+  if (promo) {
+    discount = parseFloat((1 - promo.discount / 100).toFixed(1))
+  }
+
   const { stripeSecret, loadForm } = useStripeCustomer(
-    booked ? parseInt(price) - parseInt(booking!) : parseInt(price),
+    promo
+      ? booked
+        ? (parseInt(price) - parseInt(booking!)) * discount
+        : parseInt(price) * discount
+      : booked
+      ? parseInt(price) - parseInt(booking!)
+      : parseInt(price),
     stripeId
   )
 
@@ -49,7 +65,15 @@ export const StripeElements = ({
           }}
         >
           <CustomerPaymentForm
-            price={booked ? `${parseInt(price) - parseInt(booking!)}` : price}
+            price={
+              promo
+                ? booked
+                  ? `${parseInt(price) - parseInt(booking!) * discount}`
+                  : `${parseInt(price) * discount}`
+                : booked
+                ? `${parseInt(price) - parseInt(booking!)}`
+                : price
+            }
             id={id}
             roomId={roomId}
             studentId={studentId}

@@ -26,6 +26,9 @@ type PaymentPlansSectionProps = {
   booked?: boolean
   stripeId?: string
   studentId?: string
+  promo?: {
+    discount: number
+  }
 }
 
 export const PaymentPlansSection = ({
@@ -36,9 +39,16 @@ export const PaymentPlansSection = ({
   studentId,
   booking,
   booked,
+  promo,
 }: PaymentPlansSectionProps) => {
   const { language, register, errors, onCreateARoom, loading } =
     usePaymentPlan(id)
+
+  let discount: number = 0
+
+  if (promo) {
+    discount = parseFloat((1 - promo.discount / 100).toFixed(1))
+  }
 
   return (
     <div className="flex gap-5 my-5">
@@ -105,7 +115,12 @@ export const PaymentPlansSection = ({
                         <CardDescription>{room.type} Room</CardDescription>
                         <CardTitle>
                           $
-                          {booked
+                          {promo?.discount
+                            ? booked
+                              ? (parseInt(room.price) - parseInt(booking!)) *
+                                discount
+                              : parseInt(room.price) * discount
+                            : booked
                             ? parseInt(room.price) - parseInt(booking!)
                             : room.price}
                         </CardTitle>
@@ -138,6 +153,7 @@ export const PaymentPlansSection = ({
                             booking={booking}
                             stripeId={stripeId!}
                             studentId={studentId!}
+                            promo={promo}
                           />
                         </Modal>
                       </div>

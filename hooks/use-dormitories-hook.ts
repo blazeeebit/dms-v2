@@ -1,6 +1,9 @@
 import {
+  onActivateNewPromo,
   onActiveateDorm,
   onCreateNewListing,
+  onCreatenewPromo,
+  onDeactivateNewPromo,
   onDeleteDorm,
   onGetSingleCompareDorm,
   onPostNewReview,
@@ -15,6 +18,8 @@ import {
   CreateDormListingSchema,
   CreateDormReviewProps,
   CreateDormReviewSchema,
+  CreatePromosProps,
+  CreatePromosSchema,
   MAX_UPLOAD_SIZE,
 } from '@/schemas/list.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -406,4 +411,98 @@ export const useDeleteDorm = (dormId: string) => {
   }
 
   return { loading, onDelete }
+}
+
+export const usePromos = (dormId: string) => {
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreatePromosProps>({
+    resolver: zodResolver(CreatePromosSchema),
+  })
+
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const onCreatePromo = handleSubmit(async (values) => {
+    try {
+      setLoading(true)
+      const promo = await onCreatenewPromo(dormId, values.name, values.discount)
+      if (promo) {
+        toast({
+          title: 'Success',
+          description: promo.message,
+        })
+      }
+      reset()
+      setLoading(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
+  return {
+    loading,
+    onCreatePromo,
+    register,
+    errors,
+  }
+}
+
+export const useActivatePromos = (dormId: string) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [active, setActive] = useState<string | undefined>(undefined)
+
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const onActivePromo = (id: string) => setActive(id)
+
+  const onActivatePromo = async (promoId: string) => {
+    try {
+      onActivePromo(promoId)
+      setLoading(true)
+      const promo = await onActivateNewPromo(dormId, promoId)
+      if (promo) {
+        toast({
+          title: 'Success',
+          description: promo.message,
+        })
+      }
+      setLoading(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const onDeactivePromo = async (promoId: string) => {
+    try {
+      onActivePromo(promoId)
+      setLoading(true)
+      const promo = await onDeactivateNewPromo(promoId)
+      if (promo) {
+        toast({
+          title: 'Success',
+          description: promo.message,
+        })
+      }
+      setLoading(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return {
+    loading,
+    onActivatePromo,
+    onDeactivePromo,
+    active,
+  }
 }

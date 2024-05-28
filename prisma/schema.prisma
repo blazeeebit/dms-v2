@@ -72,6 +72,7 @@ model Dormitories {
   location      String?
   Owner         Owner?    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId       String?   @db.Uuid
+  promo         Promos[]
 
   active Boolean @default(false)
 
@@ -209,6 +210,16 @@ model EmailTempplate {
   Owner     Owner?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId   String?  @db.Uuid
   dormId    String?  @db.Uuid
+}
+
+model Promos {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  discount      Int
+  active        Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id])
+  dormitoriesId String?      @db.Uuid
 }
 
 enum TransactionType {

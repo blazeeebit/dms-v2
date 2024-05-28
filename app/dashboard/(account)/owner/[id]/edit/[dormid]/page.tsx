@@ -1,8 +1,10 @@
-import { onGetDormProfile } from '@/actions/dorms'
+import { onGetAllPromos, onGetDormProfile } from '@/actions/dorms'
 import { EditContent } from '@/components/edit-content'
 import { EditCreateGallery } from '@/components/edit-content/gallery'
 import { PaymentPlansSection } from '@/components/payments'
 import { ReservationButton } from '@/components/payments/reservation'
+import { CreatePromos } from '@/components/promos/create-promo'
+import { PromoSlider } from '@/components/promos/promos-slider'
 import { ServiceChip } from '@/components/services/service-chip'
 import {
   Card,
@@ -21,6 +23,7 @@ const EditDormitory = async ({
   params: { dormid: string; id: string }
 }) => {
   const dormProfile = await onGetDormProfile(params.dormid, params.id)
+  const promos = await onGetAllPromos(params.dormid)
 
   if (!dormProfile) redirect('/dashboard')
 
@@ -52,6 +55,7 @@ const EditDormitory = async ({
               id={params.dormid}
               bookings={dormProfile.bookingPlan[0]}
             />
+            <CreatePromos id={params.dormid} />
           </CardContent>
         </Card>
       </div>
@@ -78,8 +82,14 @@ const EditDormitory = async ({
             </EditContent>
             <PaymentPlansSection
               id={params.dormid}
+              promo={dormProfile.promo[0]}
               rooms={dormProfile.rooms!}
             />
+            {promos && promos.length ? (
+              <PromoSlider promos={promos} dormId={params.dormid} />
+            ) : (
+              <CardDescription>This dorm has no promos</CardDescription>
+            )}
           </div>
         </div>
       </div>

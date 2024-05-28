@@ -35,6 +35,11 @@ export type CreateDormReviewProps = {
   review: string
 }
 
+export type CreatePromosProps = {
+  name: string
+  discount: string
+}
+
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 2
 export const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg']
 
@@ -103,4 +108,13 @@ export const CreateBookingButtonStudentSchema = z.object({
 
 export const CreateDormReviewSchema = z.object({
   review: z.string().min(1, { message: 'Your review must not be empty' }),
+})
+
+export const CreatePromosSchema = z.object({
+  name: z
+    .string()
+    .min(6, { message: 'You must provide a 6 digit code for your promo' }),
+  discount: z
+    .string()
+    .min(1, { message: 'You must a discount percentage amount' }),
 })

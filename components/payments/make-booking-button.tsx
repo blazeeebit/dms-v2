@@ -11,6 +11,9 @@ type MakeBookingButtonProps = {
   id: string
   stripeId: string
   studentId: string
+  promo?: {
+    discount: number
+  }
 }
 
 export const MakeBookingButton = ({
@@ -19,6 +22,7 @@ export const MakeBookingButton = ({
   id,
   stripeId,
   studentId,
+  promo,
 }: MakeBookingButtonProps) => {
   return (
     <div className="mt-5">
@@ -40,6 +44,7 @@ export const MakeBookingButton = ({
           stripeId={stripeId}
           price={bookingPrice}
           id={id}
+          promo={promo}
         />
       </Modal>
     </div>

@@ -220,6 +220,14 @@ export const onGetDormProfile = async (id: string, ownerId: string) => {
               language: userLanguagePreference.language,
             },
           },
+          promo: {
+            where: {
+              active: true,
+            },
+            select: {
+              discount: true,
+            },
+          },
           service: {
             select: {
               id: true,
@@ -1165,6 +1173,115 @@ export const onGetAllRecentTransactions = async (userId: string) => {
 
     if (transaction) {
       return transaction
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onCreatenewPromo = async (
+  dormId: string,
+  name: string,
+  discount: string
+) => {
+  try {
+    const promo = await client.dormitories.update({
+      where: {
+        id: dormId,
+      },
+      data: {
+        promo: {
+          create: {
+            name,
+            discount: parseInt(discount),
+          },
+        },
+      },
+    })
+
+    if (promo) {
+      return {
+        status: 200,
+        message: 'New promo created',
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetAllPromos = async (dormId: string) => {
+  try {
+    const promos = await client.promos.findMany({
+      where: {
+        dormitoriesId: dormId,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    })
+
+    if (promos) {
+      return promos
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onActivateNewPromo = async (dormId: string, promoId: string) => {
+  try {
+    const checkActive = await client.promos.findMany({
+      where: {
+        dormitoriesId: dormId,
+        active: true,
+      },
+    })
+
+    if (checkActive.length > 0) {
+      return {
+        status: 200,
+        message:
+          'Looks like you already have an active promo. Deactivate it first',
+      }
+    }
+
+    const activate = await client.promos.update({
+      where: {
+        id: promoId,
+      },
+      data: {
+        active: true,
+      },
+    })
+
+    if (activate) {
+      return {
+        status: 200,
+        message: 'Promo successfully activated',
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onDeactivateNewPromo = async (promoId: string) => {
+  try {
+    const promo = await client.promos.update({
+      where: {
+        id: promoId,
+      },
+      data: {
+        active: false,
+      },
+    })
+
+    if (promo) {
+      return {
+        status: 200,
+        message: 'Promo successfully deactivated',
+      }
     }
   } catch (error) {
     console.log(error)
