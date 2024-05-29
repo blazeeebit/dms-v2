@@ -1,8 +1,6 @@
 'use server'
 import { client } from '@/lib/prisma'
-import axios, { all } from 'axios'
-import { revalidatePath } from 'next/cache'
-import { onCreateTransaction } from './payment'
+import axios from 'axios'
 import { getMonthName } from '@/lib/utils'
 import { onMailer } from './mail'
 import { clerkClient } from '@clerk/nextjs/server'
@@ -818,15 +816,14 @@ export const onGetAllDormReviews = async (dormId: string) => {
           select: {
             studentId: true,
             review: true,
+            id: true,
           },
           take: 5,
         },
       },
     })
 
-    if (reviews) {
-      return reviews
-    }
+    return reviews
   } catch (error) {
     console.log(error)
   }
@@ -1385,4 +1382,43 @@ export const onGetRentedRoomType = async (roomId: string) => {
   } catch (error) {
     console.log(error)
   }
+}
+
+export const onGetIndividualRatings = async (studentId: string) => {
+  try {
+    const ratings = await client.rating.findMany({
+      where: {
+        studentId,
+      },
+      select: {
+        rating: true,
+      },
+    })
+
+    if (ratings) {
+      const userInfo = await client.user.findUnique({
+        where: {
+          id: studentId,
+        },
+        select: {
+          image: true,
+          name: true,
+          clerkId: true,
+        },
+      })
+
+      if (userInfo) {
+        const imageUrl = await clerkClient.users.getUser(userInfo.clerkId)
+        const ratingsAvg = ratings.reduce((total, next) => {
+          return total + next.rating
+        }, 0)
+
+        return {
+          user: userInfo,
+          clerkImg: imageUrl.imageUrl,
+          total: ratingsAvg / ratings.length,
+        }
+      }
+    }
+  } catch (error) {}
 }

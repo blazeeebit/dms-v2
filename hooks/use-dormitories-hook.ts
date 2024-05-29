@@ -5,6 +5,7 @@ import {
   onCreatenewPromo,
   onDeactivateNewPromo,
   onDeleteDorm,
+  onGetIndividualRatings,
   onGetRentedRoomType,
   onGetSingleCompareDorm,
   onGetStudentInfoRented,
@@ -546,5 +547,43 @@ export const useRentedStudents = (userId: string, roomId: string) => {
     loading,
     studentInfo,
     roomType,
+  }
+}
+
+export const useProfileReview = (studentId: string) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [review, setReview] = useState<
+    | {
+        user: {
+          clerkId: string
+          name: string
+          image: string | null
+        }
+        clerkImg: string
+        total: number
+      }
+    | undefined
+  >(undefined)
+
+  const onGetStudentReview = async () => {
+    try {
+      setLoading(true)
+      const reviews = await onGetIndividualRatings(studentId)
+      if (reviews) {
+        setReview(reviews)
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    onGetStudentReview()
+  }, [])
+
+  return {
+    loading,
+    review,
   }
 }

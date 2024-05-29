@@ -15,9 +15,7 @@ type RentedStudentsCardProps = {
 }
 
 export const RentedStudentsCard = ({
-  id,
   student,
-  createdAt,
   roomId,
 }: RentedStudentsCardProps) => {
   const { loading, studentInfo, roomType } = useRentedStudents(

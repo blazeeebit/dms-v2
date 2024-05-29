@@ -7,6 +7,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import { DeleteDormListing } from './delete-listing'
 
 type ListingCardProps = {
   id: string
@@ -14,6 +15,7 @@ type ListingCardProps = {
   thumbnail: string
   userId: string
   description: string
+  admin?: boolean
 }
 
 export const DormCard = ({
@@ -22,13 +24,14 @@ export const DormCard = ({
   title,
   userId,
   description,
+  admin,
 }: ListingCardProps) => {
   return (
     <Card className="w-full dark:hover:bg-gray-900 hover:bg-cream transition duration-150 ease-in-out">
-      <CardContent className="p-0 flex">
+      <CardContent className="p-5 flex">
         <Link
           href={`/dorms/${id}/${userId}`}
-          className="flex-1 flex-col sm:flex-row flex gap-10 p-5"
+          className="flex-1 flex-col sm:flex-row flex gap-10"
         >
           <div className="min-w-[100px] w-[100px] h-[100px] relative rounded-md overflow-hidden">
             <Image src={thumbnail} fill loading="lazy" alt="thumbnail" />
@@ -42,6 +45,11 @@ export const DormCard = ({
             </CardDescription>
           </div>
         </Link>
+        {admin && (
+          <div>
+            <DeleteDormListing id={id} />
+          </div>
+        )}
       </CardContent>
     </Card>
   )

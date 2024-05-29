@@ -15,7 +15,7 @@ const EmailTemplate = async ({
   const language = await onGetUserLanguagePreference(params.id)
   const dorms = await onGetDormsNameAndIds(params.id, language!)
 
-  if (!template) redirect('/dashboard')
+  if (!template) redirect('/')
 
   return (
     <div className="flex-1 flex h-0 pb-10 w-full">

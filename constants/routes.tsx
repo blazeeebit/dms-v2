@@ -70,12 +70,6 @@ export const ACCOUNT_PAGES_MENU_OWNER: AccountPagesMenuProps[] = [
   },
   {
     id: uuidv4(),
-    page: 'community',
-    path: `${PATH_URLS.DASHBOARD_OWNER}/`,
-    icon: <Users size={25} />,
-  },
-  {
-    id: uuidv4(),
     page: 'email-marketing',
     path: `${PATH_URLS.DASHBOARD_OWNER}/`,
     icon: <Mail size={25} />,

@@ -2,6 +2,7 @@ import { onGetUserInfo } from '@/actions/auth'
 import {
   onCheckIfBooked,
   onCheckIfStudentRented,
+  onGetAllDormReviews,
   onGetDormProfile,
   onGetDormReviewForUser,
   onGetTotalRating,
@@ -10,6 +11,7 @@ import { UserDormGallery } from '@/components/dormitories/gallery'
 import { PaymentPlansSection } from '@/components/payments'
 import { MakeBookingButton } from '@/components/payments/make-booking-button'
 import { RatingSystem } from '@/components/rating'
+import { ReviewCard } from '@/components/reviews/review-card'
 
 import { ServiceChip } from '@/components/services/service-chip'
 
@@ -36,11 +38,12 @@ const DormPage = async ({
   const rented = await onCheckIfStudentRented(params.userid, params.id)
   const userReview = await onGetDormReviewForUser(params.id, params.userid)
   const rating = await onGetTotalRating(params.id)
+  const reviews = await onGetAllDormReviews(params.id)
 
-  if (!dorm) redirect('/dashboard')
+  if (!dorm) redirect('/')
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-y-10 xl:gap-y-0 xl:gap-16">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-y-10 xl:gap-y-0 xl:gap-16 pb-10">
       <div className="col-span-1 relative">
         <Card className="rounded-2xl sticky top-5">
           <CardContent className="py-5 flex flex-col gap-5">
@@ -126,6 +129,13 @@ const DormPage = async ({
               rooms={dorm.rooms!}
             />
           ))}
+        <div className="flex flex-col gap-3">
+          {reviews &&
+            reviews.length &&
+            reviews[0].review.map((review) => (
+              <ReviewCard key={review.id} {...review} />
+            ))}
+        </div>
       </div>
     </div>
   )
