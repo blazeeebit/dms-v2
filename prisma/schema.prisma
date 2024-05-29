@@ -218,7 +218,7 @@ model Promos {
   discount      Int
   active        Boolean      @default(false)
   createdAt     DateTime     @default(now())
-  Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id])
+  Dormitories   Dormitories? @relation(fields: [dormitoriesId], references: [id], onDelete: Cascade)
   dormitoriesId String?      @db.Uuid
 }
 

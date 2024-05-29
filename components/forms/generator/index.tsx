@@ -61,7 +61,11 @@ export const FormGenerator = ({
           >
             {options?.length &&
               options.map((option) => (
-                <option value={option.value} key={option.id}>
+                <option
+                  value={option.value}
+                  key={option.id}
+                  className="dark:bg-muted"
+                >
                   {option.label}
                 </option>
               ))}

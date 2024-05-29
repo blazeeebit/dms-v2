@@ -33,10 +33,8 @@ export const ChatWindow = ({
     onSendMessage,
     messageWindowRef,
   } = useChatWindow(userId, id)
-
-  console.log(userId, id)
   return (
-    <div className="flex flex-col gap-3 items-end">
+    <div className="flex flex-col gap-3 items-end bg-muted">
       <AnimatePresence>
         {openWindow && (
           <motion.div
