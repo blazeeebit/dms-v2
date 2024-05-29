@@ -5,7 +5,9 @@ import {
   onCreatenewPromo,
   onDeactivateNewPromo,
   onDeleteDorm,
+  onGetRentedRoomType,
   onGetSingleCompareDorm,
+  onGetStudentInfoRented,
   onPostNewReview,
   onRateDormService,
   onSearchDormToCompare,
@@ -504,5 +506,45 @@ export const useActivatePromos = (dormId: string) => {
     onActivatePromo,
     onDeactivePromo,
     active,
+  }
+}
+
+export const useRentedStudents = (userId: string, roomId: string) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [studentInfo, setStudentInfo] = useState<
+    | {
+        name: string
+        email: string
+        image: string | null
+      }
+    | undefined
+  >(undefined)
+  const [roomType, setRoomType] = useState<string | undefined>(undefined)
+
+  const onGetRentedStudentsInfo = async () => {
+    try {
+      setLoading(true)
+      const info = await onGetStudentInfoRented(userId)
+      if (info) {
+        setStudentInfo(info)
+        const room = await onGetRentedRoomType(roomId)
+        if (room) {
+          setRoomType(room)
+        }
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    onGetRentedStudentsInfo()
+  }, [])
+
+  return {
+    loading,
+    studentInfo,
+    roomType,
   }
 }

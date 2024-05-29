@@ -1,10 +1,17 @@
-import { onGetAllPromos, onGetDormProfile } from '@/actions/dorms'
+import {
+  onGetAllPromos,
+  onGetDormProfile,
+  onGetRentedStudents,
+  onGetReviewCount,
+  onGetTotalRating,
+} from '@/actions/dorms'
 import { EditContent } from '@/components/edit-content'
 import { EditCreateGallery } from '@/components/edit-content/gallery'
 import { PaymentPlansSection } from '@/components/payments'
 import { ReservationButton } from '@/components/payments/reservation'
 import { CreatePromos } from '@/components/promos/create-promo'
 import { PromoSlider } from '@/components/promos/promos-slider'
+import { RentedStudentsCard } from '@/components/rentedStudents/rended-students-card'
 import { ServiceChip } from '@/components/services/service-chip'
 import {
   Card,
@@ -13,6 +20,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { Star } from 'lucide-react'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import React from 'react'
@@ -24,6 +32,9 @@ const EditDormitory = async ({
 }) => {
   const dormProfile = await onGetDormProfile(params.dormid, params.id)
   const promos = await onGetAllPromos(params.dormid)
+  const rating = await onGetTotalRating(params.dormid)
+  const reviewCount = await onGetReviewCount(params.dormid)
+  const rentedStudents = await onGetRentedStudents(params.dormid)
 
   if (!dormProfile) redirect('/dashboard')
 
@@ -51,6 +62,22 @@ const EditDormitory = async ({
                 ))}
               </div>
             </div>
+            {rating ? (
+              <Label className="flex flex-col gap-2">
+                Rating
+                <div className="flex gap-2">
+                  <CardDescription>{rating.toFixed(1)}</CardDescription>
+                  <Star fill="#f2c246" className="text-[#f2c246]" />
+                  {reviewCount && (
+                    <CardDescription className="text-[#f2c246]">
+                      {reviewCount} Reviews
+                    </CardDescription>
+                  )}
+                </div>
+              </Label>
+            ) : (
+              ''
+            )}
             <ReservationButton
               id={params.dormid}
               bookings={dormProfile.bookingPlan[0]}
@@ -89,6 +116,16 @@ const EditDormitory = async ({
               <PromoSlider promos={promos} dormId={params.dormid} />
             ) : (
               <CardDescription>This dorm has no promos</CardDescription>
+            )}
+          </div>
+          <div className="w-full mt-5">
+            {rentedStudents && rentedStudents.length && (
+              <div className="flex flex-col gap-5">
+                <Label>Rented Students</Label>
+                {rentedStudents.map((student) => (
+                  <RentedStudentsCard key={student.id} {...student} />
+                ))}
+              </div>
             )}
           </div>
         </div>

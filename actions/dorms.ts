@@ -1306,3 +1306,83 @@ export const onDeleteRoomPlan = async (id: string) => {
     console.log(error)
   }
 }
+
+export const onGetReviewCount = async (dormId: string) => {
+  try {
+    const reviews = await client.review.count({
+      where: {
+        dormitoriesId: dormId,
+      },
+    })
+
+    if (reviews) {
+      return reviews
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetRentedStudents = async (dormId: string) => {
+  try {
+    const students = await client.rented.findMany({
+      where: {
+        Room: {
+          dormitoriesId: dormId,
+        },
+      },
+      take: 5,
+    })
+
+    if (students) {
+      return students
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetStudentInfoRented = async (userId: string) => {
+  try {
+    const info = await client.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        name: true,
+        clerkId: true,
+        image: true,
+      },
+    })
+
+    if (info) {
+      const email = await clerkClient.users.getUser(info.clerkId)
+      return {
+        name: info.name,
+        email: email.emailAddresses[0].emailAddress,
+        image: info.image || email.imageUrl,
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const onGetRentedRoomType = async (roomId: string) => {
+  try {
+    const room = await client.room.findUnique({
+      where: {
+        id: roomId,
+      },
+      select: {
+        type: true,
+      },
+    })
+
+    if (room) {
+      return room.type
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
