@@ -19,8 +19,8 @@ export const OwnerCredits = ({ id }: OwnerCreditsProps) => {
             {isPlan?.plan == 'STANDARD'
               ? '10'
               : isPlan?.plan == 'PRO'
-              ? '25'
-              : '60'}
+              ? '50'
+              : '100'}
           </CardDescription>
         </Card>
       </Loader>

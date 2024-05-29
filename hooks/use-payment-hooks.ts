@@ -2,12 +2,15 @@ import {
   onCreateBooking,
   onCreateDormBookingButton,
   onCreateRoomPlan,
+  onDeleteRoomPlan,
 } from '@/actions/dorms'
 import {
   onCreateCustomerPaymentIntentSecret,
   onCreateTransaction,
+  onGetStripeClientSecret,
   onGetUserSubscription,
   onRoomRented,
+  onUpdateSubscription,
 } from '@/actions/payment'
 import { useToast } from '@/components/ui/use-toast'
 import { useProfileContext } from '@/context/use-profile-context'
@@ -81,6 +84,8 @@ export const useStripe = (id: string) => {
 export const usePaymentPlan = (id: string) => {
   const { user } = useProfileContext()
   const [loading, setLoading] = useState<boolean>(false)
+  const [deleteing, setDeleting] = useState<boolean>(false)
+  const [selectedCard, setSelectedCard] = useState<string | undefined>()
   const {
     register,
     formState: { errors },
@@ -111,7 +116,35 @@ export const usePaymentPlan = (id: string) => {
     }
   })
 
-  return { language, register, errors, onCreateARoom, loading }
+  const onDeleteRoom = async (roomId: string) => {
+    try {
+      setSelectedCard(roomId)
+      setDeleting(true)
+      const deleted = await onDeleteRoomPlan(roomId)
+      if (deleted) {
+        toast({
+          title: 'Success',
+          description: deleted.message,
+        })
+      }
+      setDeleting(false)
+      setSelectedCard(undefined)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return {
+    language,
+    register,
+    errors,
+    onCreateARoom,
+    loading,
+    deleteing,
+    onDeleteRoom,
+    selectedCard,
+  }
 }
 
 export const useReservations = (id: string) => {
@@ -275,4 +308,112 @@ export const useStripeCustomer = (amount: number, stripeId: string) => {
   }, [])
 
   return { stripeSecret, loadForm }
+}
+
+export const useSubscriptionPlan = (
+  plan: 'STANDARD' | 'PRO' | 'ULTIMATE',
+  id: string
+) => {
+  const [currentPlan, setCurrentPlan] = useState<
+    'STANDARD' | 'PRO' | 'ULTIMATE'
+  >(plan)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const { toast } = useToast()
+  const router = useRouter()
+  const onUpdatetToFreeTier = async () => {
+    try {
+      setLoading(true)
+      const free = await onUpdateSubscription(id, 'STANDARD')
+      if (free) {
+        setLoading(false)
+        toast({
+          title: 'Success',
+          description: free.message,
+        })
+        router.refresh()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const onSetActivePlan = (p: 'STANDARD' | 'PRO' | 'ULTIMATE') =>
+    setCurrentPlan(p)
+
+  return { currentPlan, onSetActivePlan, loading, onUpdatetToFreeTier }
+}
+
+export const useStripeElements = (payment: 'STANDARD' | 'PRO' | 'ULTIMATE') => {
+  const [stripeSecret, setStripeSecret] = useState<string>('')
+  const [loadForm, setLoadForm] = useState<boolean>(false)
+  const onGetBillingIntent = async (plans: 'STANDARD' | 'PRO' | 'ULTIMATE') => {
+    try {
+      setLoadForm(true)
+      const intent = await onGetStripeClientSecret(plans)
+      if (intent) {
+        setLoadForm(false)
+        setStripeSecret(intent.secret!)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    onGetBillingIntent(payment)
+  }, [payment])
+
+  return { stripeSecret, loadForm }
+}
+
+export const useCompletePayment = (
+  id: string,
+  payment: 'STANDARD' | 'PRO' | 'ULTIMATE'
+) => {
+  const [processing, setProcessing] = useState<boolean>(false)
+  const router = useRouter()
+  const { toast } = useToast()
+  const stripe = useStripeHook()
+  const elements = useElements()
+
+  const onMakePayment = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!stripe || !elements) {
+      return null
+    }
+
+    try {
+      setProcessing(true)
+
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: 'http://localhost:3000/dashboard',
+        },
+        redirect: 'if_required',
+      })
+
+      if (error) {
+        console.log(error)
+      }
+
+      if (paymentIntent?.status === 'succeeded') {
+        const plan = await onUpdateSubscription(id, payment)
+        if (plan) {
+          toast({
+            title: 'Success',
+            description: plan.message,
+          })
+        }
+      }
+
+      setProcessing(false)
+      router.refresh()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return { processing, onMakePayment }
 }

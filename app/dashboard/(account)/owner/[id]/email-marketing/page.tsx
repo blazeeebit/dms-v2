@@ -60,7 +60,7 @@ const EmailMarketingPage = async ({ params }: { params: { id: string } }) => {
                   trigger={<Ellipsis />}
                   className="text-gray-500 outline-none p-0"
                 >
-                  <SendEmails id={template.id} />
+                  <SendEmails userId={params.id} id={template.id} />
                 </DropDown>
               </CardContent>
             </Card>

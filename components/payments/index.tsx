@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardTitle } from '../ui/card'
 import { Modal } from '../modal'
 import { usePaymentPlan } from '@/hooks/use-payment-hooks'
 import { DMS_CONTENT } from '@/constants/language'
-import { CircleDollarSign, Plus } from 'lucide-react'
+import { CircleDollarSign, Plus, Trash } from 'lucide-react'
 import { Tooltip } from '../tooltip'
 import { CREATE_DORM_ROOM_PAYMENT_PLAN } from '@/constants/form'
 import { FormGenerator } from '../forms/generator'
@@ -41,8 +41,16 @@ export const PaymentPlansSection = ({
   booked,
   promo,
 }: PaymentPlansSectionProps) => {
-  const { language, register, errors, onCreateARoom, loading } =
-    usePaymentPlan(id)
+  const {
+    language,
+    register,
+    errors,
+    onCreateARoom,
+    loading,
+    deleteing,
+    onDeleteRoom,
+    selectedCard,
+  } = usePaymentPlan(id)
 
   let discount: number = 0
 
@@ -108,7 +116,12 @@ export const PaymentPlansSection = ({
             {rooms.map((room) => (
               <SwiperSlide key={room.id}>
                 <Card className="flex items-center p-5 cursor-pointer">
-                  <CardContent className="p-0 flex w-full">
+                  <CardContent className="p-0 flex w-full relative">
+                    <div className="absolute right-0 top-0 text-red-500">
+                      <Loader loading={deleteing && selectedCard === room.id}>
+                        <Trash onClick={() => onDeleteRoom(room.id)} />
+                      </Loader>
+                    </div>
                     <div>
                       <CircleDollarSign />
                       <div className="mt-3">

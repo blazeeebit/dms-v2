@@ -1287,3 +1287,22 @@ export const onDeactivateNewPromo = async (promoId: string) => {
     console.log(error)
   }
 }
+
+export const onDeleteRoomPlan = async (id: string) => {
+  try {
+    const deleted = await client.room.delete({
+      where: {
+        id,
+      },
+    })
+
+    if (deleted) {
+      return {
+        status: 200,
+        message: 'Room successfully deleted',
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}

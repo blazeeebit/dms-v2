@@ -240,7 +240,7 @@ export const useEmailTemplate = (
   }
 }
 
-export const useSendMail = (emailId: string) => {
+export const useSendMail = (emailId: string, userId: string) => {
   const [loading, setLoading] = useState<boolean>(false)
 
   const { toast } = useToast()
@@ -250,7 +250,7 @@ export const useSendMail = (emailId: string) => {
   const onBulkEmails = async () => {
     try {
       setLoading(true)
-      const mailed = await onSendBulkEmailsToStudents(emailId)
+      const mailed = await onSendBulkEmailsToStudents(emailId, userId)
       if (mailed) {
         toast({
           title: 'Success',

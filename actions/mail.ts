@@ -274,7 +274,10 @@ export const onDeleteEmailTemplate = async (emailId: string) => {
   }
 }
 
-export const onSendBulkEmailsToStudents = async (emailId: string) => {
+export const onSendBulkEmailsToStudents = async (
+  emailId: string,
+  userId: string
+) => {
   try {
     const template = await client.emailTempplate.findUnique({
       where: {
@@ -351,6 +354,21 @@ export const onSendBulkEmailsToStudents = async (emailId: string) => {
           }
           room++
         }
+
+        await client.owner.update({
+          where: {
+            userId,
+          },
+          data: {
+            subscription: {
+              update: {
+                data: {
+                  credits: { decrement: 1 },
+                },
+              },
+            },
+          },
+        })
 
         return {
           status: 200,

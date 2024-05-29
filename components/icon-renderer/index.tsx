@@ -22,6 +22,9 @@ import {
   Building,
   CircleDollarSign,
   Bath,
+  Store,
+  BookOpenText,
+  ChefHat,
 } from 'lucide-react'
 
 type IconRendererProp = {
@@ -76,6 +79,14 @@ export const IconRenderer = ({ icon }: IconRendererProp) => {
       return <Bath />
     case 'location':
       return <NotebookTabs />
+    case 'market':
+      return <Store />
+    case 'study':
+      return <BookOpenText />
+    case 'restaurant':
+      return <ChefHat />
+    case 'kitchen':
+      return <CookingPot />
     default:
       return <></>
   }

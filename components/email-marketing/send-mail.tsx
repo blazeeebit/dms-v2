@@ -7,10 +7,11 @@ import { Loader } from '../loader'
 
 type SendEmailsProps = {
   id: string
+  userId: string
 }
 
-export const SendEmails = ({ id }: SendEmailsProps) => {
-  const { onBulkEmails, loading } = useSendMail(id)
+export const SendEmails = ({ id, userId }: SendEmailsProps) => {
+  const { onBulkEmails, loading } = useSendMail(id, userId)
   return (
     <DropdownMenuItem onClick={onBulkEmails} className="cursor-pointer">
       <Loader loading={loading}>
