@@ -119,13 +119,15 @@ const EditDormitory = async ({
             )}
           </div>
           <div className="w-full mt-5">
-            {rentedStudents && rentedStudents.length && (
+            {rentedStudents && rentedStudents.length ? (
               <div className="flex flex-col gap-5">
                 <Label>Rented Students</Label>
                 {rentedStudents.map((student) => (
                   <RentedStudentsCard key={student.id} {...student} />
                 ))}
               </div>
+            ) : (
+              <CardDescription>No Students Renting</CardDescription>
             )}
           </div>
         </div>

@@ -120,6 +120,7 @@ export const useAdminUserCard = (clerkId: string) => {
   const [banning, setBanning] = useState<boolean>(false)
 
   const { toast } = useToast()
+  const router = useRouter()
 
   const onGetUserInfo = async () => {
     try {
@@ -145,6 +146,7 @@ export const useAdminUserCard = (clerkId: string) => {
         })
       }
       setDeleting(false)
+      router.refresh()
     } catch (error) {
       console.log(error)
     }

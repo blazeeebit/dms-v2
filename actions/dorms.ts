@@ -313,6 +313,7 @@ export const onSearchDormToCompare = async (query: string, id: string) => {
       })
 
       if (dorms) {
+        console.log('Dorms', dorms, query)
         return dorms
       }
     }
@@ -365,6 +366,9 @@ export const onGetAllDorms = async (id: string) => {
     })
     if (userLanguagePreference) {
       const allDorms = await client.dormitories.findMany({
+        where: {
+          active: true,
+        },
         select: {
           id: true,
           featuredImage: true,
@@ -382,6 +386,7 @@ export const onGetAllDorms = async (id: string) => {
             },
           },
         },
+        take: 5,
       })
 
       return allDorms

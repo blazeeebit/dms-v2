@@ -83,7 +83,7 @@ export const IconRenderer = ({ icon }: IconRendererProp) => {
       return <Store />
     case 'study':
       return <BookOpenText />
-    case 'restaurant':
+    case 'cooking':
       return <ChefHat />
     case 'kitchen':
       return <CookingPot />
